@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cadastro() {
     const [nome, setNome] = useState('');
@@ -6,29 +7,33 @@ export default function Cadastro() {
     const [dtNascimento, setDtNascimento] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const navigate = useNavigate();
 
     const Cadastro = async (e) => {
         e.preventDefault();
     
-        const resposta = await fetch('http://localhost:3001/Cadastro', {
+        const resposta = await fetch('http://localhost:3001/cadastro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome, nomeUsuario, dtNascimento, email, senha }),
         });
     
-        const data = await resposta.json();
+        const dados = await resposta.json();
     
         if (resposta.ok) {
           alert('Cadastro feito com sucesso!');
-          console.log(data); // Token, dados do usuário, etc.
+          console.log(dados);
+          navigate('/');
+
         } else {
-          alert(data.erro || 'Erro ao fazer Cadastro');
+          alert(dados.erro || 'Erro ao fazer Cadastro');
         }
       };
 
     return (
         <div>
         <h1>Cadastro</h1>
+        {/* aqui com o form ele vai mandar o que ta dentro dos input pro post do localhost:3001/cadastro no backend */}
         <form onSubmit={Cadastro}>
             
             <input type="text" placeholder="Digite seu nome" value={nome} onChange={(e) => setNome(e.target.value)}/>

@@ -12,7 +12,7 @@ export async function conectar()
             database: 'gamevault',
         });
 
-    console.log('🟢 Conectado ao MySQL!');
+    console.log(' Conectado ao MySQL!');
 
   }
 

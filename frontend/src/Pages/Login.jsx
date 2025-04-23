@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const navigate = useNavigate();
 
     const Login = async (e) => {
         e.preventDefault();
@@ -13,17 +15,30 @@ export default function Login() {
           body: JSON.stringify({ email, senha }),
         });
     
-        const data = await resposta.json();
-    
+        const dados = await resposta.json();
+        // console.log(dados.cadastro2Completo);
+
         if (resposta.ok) {
           alert('Login feito com sucesso!');
-          console.log(data); // Token, dados do usuário, etc.
+          console.log(dados); 
+          
+          localStorage.setItem('id_usuario', dados.usuario.id);
+          //--------------------------------------------------
+          if (dados.usuario.cadastro2Completo) {
+            console.log('Redirecionando para home...');
+            navigate('/home');
+          } else {
+            console.log('Redirecionando para cadastro2...');
+            navigate('/cadastro2');
+          }
+          //------------------------------------------------------
         } else {
-          alert(data.erro || 'Erro ao fazer login');
+          alert(dados.erro || 'Erro ao fazer login');
         }
       };
 
       return (
+        // aqui dentro do form ele vai pegar todos os dados dentro dos input e enviar para o metodo post do localhost:3001/login no backend pra poder fazer o controle de login ou seja, cuidado ao mexer
         <form onSubmit={Login}>
           <h1>Login</h1>
           <input type="email" placeholder="Digite seu email" value={email} onChange={(e) => setEmail(e.target.value)}/>

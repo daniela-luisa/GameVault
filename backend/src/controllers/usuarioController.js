@@ -1,7 +1,8 @@
-import { listarUsuarios } from '../models/usuarioModel.js';
+import { buscarCategorias, listarUsuarios, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
 import { autenticarUsuario } from '../models/usuarioModel.js';
 import { criarUsuario } from '../models/usuarioModel.js';
 
+//get usuarios
 export async function getUsuarios(req, res) {
   try {
     const usuarios = await listarUsuarios();
@@ -11,7 +12,29 @@ export async function getUsuarios(req, res) {
   }
 }
 
+//get categorias
+export async function getCategorias(req, res, next){
+  try {
+    const categorias = await buscarCategorias();
+    res.json(categorias);
 
+  }catch (error){
+    res.status(500).json({ erro: 'Erro ao buscar categorias' });
+
+  }
+}
+export async function getUsu_categ_pref(req, res, next){
+  try {
+    const usu_categ_pref = await buscarUsu_categ_pref();
+    res.json(usu_categ_pref);
+
+  }catch (error){
+    res.status(500).json({ erro: 'Erro ao buscar categorias' });
+
+  }
+}
+
+// post login
 export async function loginUsuario(req, res) {
   const { email, senha } = req.body;
 
@@ -28,18 +51,30 @@ export async function loginUsuario(req, res) {
   }
 }
 
+//post cadastro
 export async function cadastroUsuario(req, res) {
     const { nome, nomeUsuario, dtNascimento, email, senha } = req.body;
   
     try {
-      const usuario = await criarUsuario(nome, nomeUsuario, dtNascimento, email, senha);
-  
-      if (usuario) {
-        res.json({ mensagem: 'Cadastro bem-sucedido', usuario });
+      const novoUsuario = await criarUsuario(nome, nomeUsuario, dtNascimento, email, senha);
+      if (novoUsuario) {
+        res.json({ mensagem: 'Cadastro bem-sucedido', novoUsuario });
       } else {
         res.status(401).json({ erro: 'Erro ao cadastrar usuario' });
       }
     } catch (error) {
       res.status(500).json({ erro: 'Erro ao fazer cadastro' });
+    }
+  }
+
+  //post salvar as categorias pro usuario
+  export async function salvarCategorias(req, res) {
+    const { id_usuario, categorias } = req.body;  
+    try {
+      // Chama a função do model pra salvar as categorias
+      await categoriaEscolhida(id_usuario, categorias);
+      return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });
+    } catch (error) {
+      return res.status(500).json({ erro: 'Erro ao salvar categorias', detalhes: error.message });
     }
   }
