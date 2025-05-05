@@ -25,10 +25,8 @@ export default function Login() {
           localStorage.setItem('id_usuario', dados.usuario.id);
           //--------------------------------------------------
           if (dados.usuario.cadastro2Completo) {
-            console.log('Redirecionando para home...');
             navigate('/home');
           } else {
-            console.log('Redirecionando para cadastro2...');
             navigate('/cadastro2');
           }
           //------------------------------------------------------
