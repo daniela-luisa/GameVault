@@ -28,7 +28,6 @@ const toggleCategoria = (id) => {
       setSelecionadas([...selecionadas, id]);
     }
   };
-
   const enviarCategorias = () => {
     fetch('http://localhost:3001/salvar-categorias', {
       method: 'POST',

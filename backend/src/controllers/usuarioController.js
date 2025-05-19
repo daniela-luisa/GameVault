@@ -2,6 +2,8 @@ import { buscarCategorias, listarUsuarios, categoriaEscolhida, buscarUsu_categ_p
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario } from '../models/usuarioModel.js';
 
+
+
 //get usuarios
 export async function getUsuarios(req, res) {
   try {
@@ -51,21 +53,21 @@ export async function loginUsuario(req, res) {
   }
 }
 
-//post cadastro
-export async function cadastroUsuario(req, res) {
-    const { nome, nomeUsuario, dtNascimento, email, senha } = req.body;
-  
-    try {
-      const novoUsuario = await criarUsuario(nome, nomeUsuario, dtNascimento, email, senha);
-      if (novoUsuario) {
-        res.json({ mensagem: 'Cadastro bem-sucedido', novoUsuario });
-      } else {
-        res.status(401).json({ erro: 'Erro ao cadastrar usuario' });
+  //post cadastro
+  export async function cadastroUsuario(req, res) {
+      const { nome, nomeUsuario, dtNascimento, email, senha } = req.body;
+    
+      try {
+        const novoUsuario = await criarUsuario(nome, nomeUsuario, dtNascimento, email, senha);
+        if (novoUsuario) {
+          res.json({ mensagem: 'Cadastro bem-sucedido', novoUsuario });
+        } else {
+          res.status(401).json({ erro: 'Erro ao cadastrar usuario' });
+        }
+      } catch (error) {
+        res.status(500).json({ erro: 'Erro ao fazer cadastro' });
       }
-    } catch (error) {
-      res.status(500).json({ erro: 'Erro ao fazer cadastro' });
     }
-  }
 
   //post salvar as categorias pro usuario
   export async function salvarCategorias(req, res) {
