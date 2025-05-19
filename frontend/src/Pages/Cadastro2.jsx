@@ -28,7 +28,6 @@ export default function Cadastro2() {
       setSelecionadas([...selecionadas, id]);
     }
   };
-
   const enviarCategorias = () => {
     fetch('http://localhost:3001/salvar-categorias', {
       method: 'POST',
