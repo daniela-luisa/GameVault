@@ -90,6 +90,7 @@ export default function Cadastro2() {
             <div className="flex absolute justify-center w-full pointer-events-none">
               <button
                 type="submit"
+                onClick={enviarCategorias}
                 className="bg-green-500 hover:bg-green-600 text-white py-2 px-8 rounded-md text-2xl flex items-center gap-2 transition pointer-events-auto"
                 style={{ fontFamily: "Acme" }}>
                 CONTINUAR
