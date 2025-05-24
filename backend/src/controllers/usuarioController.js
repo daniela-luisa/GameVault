@@ -1,18 +1,18 @@
-import { buscarCategorias, listarUsuarios, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
+import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario } from '../models/usuarioModel.js';
 
 
 
 //get usuarios
-export async function getUsuarios(req, res) {
-  try {
-    const usuarios = await listarUsuarios();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ erro: 'Erro ao buscar usuários' });
-  }
-}
+// export async function getUsuarios(req, res) {
+//   try {
+//     const usuarios = await listarUsuarios();
+//     res.json(usuarios);
+//   } catch (error) {
+//     res.status(500).json({ erro: 'Erro ao buscar usuários' });
+//   }
+// }
 
 //get categorias
 export async function getCategorias(req, res, next){
