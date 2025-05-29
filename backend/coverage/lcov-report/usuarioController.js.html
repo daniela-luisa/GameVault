@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.72% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/44</span>
+                <span class='fraction'>20/40</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.72% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/44</span>
+                <span class='fraction'>20/40</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -179,29 +179,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -244,10 +244,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -279,37 +279,37 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { buscarCategorias, listarUsuarios, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario } from '../models/usuarioModel.js';
 &nbsp;
 &nbsp;
 &nbsp;
 //get usuarios
-export async function <span class="fstat-no" title="function not covered" >getUsuarios(</span>req, res) {
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const usuarios = <span class="cstat-no" title="statement not covered" >await listarUsuarios();</span>
-<span class="cstat-no" title="statement not covered" >    res.json(usuarios);</span>
-  } catch (error) {
-<span class="cstat-no" title="statement not covered" >    res.status(500).json({ erro: 'Erro ao buscar usuários' });</span>
-  }
-}
+// export async function getUsuarios(req, res) {
+//   try {
+//     const usuarios = await listarUsuarios();
+//     res.json(usuarios);
+//   } catch (error) {
+//     res.status(500).json({ erro: 'Erro ao buscar usuários' });
+//   }
+// }
 &nbsp;
 //get categorias
-export async function <span class="fstat-no" title="function not covered" >getCategorias(</span>req, res, next){
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const categorias = <span class="cstat-no" title="statement not covered" >await buscarCategorias();</span>
-<span class="cstat-no" title="statement not covered" >    res.json(categorias);</span>
+export async function getCategorias(req, res, next){
+  try {
+    const categorias = await buscarCategorias();
+    res.json(categorias);
 &nbsp;
   }catch (error){
 <span class="cstat-no" title="statement not covered" >    res.status(500).json({ erro: 'Erro ao buscar categorias' });</span>
 &nbsp;
   }
 }
-export async function <span class="fstat-no" title="function not covered" >getUsu_categ_pref(</span>req, res, next){
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const usu_categ_pref = <span class="cstat-no" title="statement not covered" >await buscarUsu_categ_pref();</span>
-<span class="cstat-no" title="statement not covered" >    res.json(usu_categ_pref);</span>
+export async function getUsu_categ_pref(req, res, next){
+  try {
+    const usu_categ_pref = await buscarUsu_categ_pref();
+    res.json(usu_categ_pref);
 &nbsp;
   }catch (error){
 <span class="cstat-no" title="statement not covered" >    res.status(500).json({ erro: 'Erro ao buscar categorias favoritas do usuario' });</span>
@@ -351,11 +351,11 @@ export async function loginUsuario(req, res) {
     }
 &nbsp;
   //post salvar as categorias pro usuario
-  export async function <span class="fstat-no" title="function not covered" >salvarCategorias(</span>req, res) {
-    const { id_usuario, categorias } = <span class="cstat-no" title="statement not covered" >req.body;  </span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      await categoriaEscolhida(id_usuario, categorias);</span>
-<span class="cstat-no" title="statement not covered" >      return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });</span>
+  export async function salvarCategorias(req, res) {
+    const { id_usuario, categorias } = req.body;  
+    try {
+      await categoriaEscolhida(id_usuario, categorias);
+      return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      return res.status(500).json({ erro: 'Erro ao salvar categorias', detalhes: error.message });</span>
     }
@@ -394,7 +394,7 @@ export async function loginUsuario(req, res) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-19T22:10:48.494Z
+                at 2025-05-23T01:00:27.801Z
             </div>
         <script src="prettify.js"></script>
         <script>
