@@ -35,6 +35,9 @@ export async function loginUsuario(req, res) {
 
     if (usuario) {
       res.json({ mensagem: 'Login bem-sucedido', usuario });
+      
+     global.usuarioCodigo = usuario.id_usuario;
+     global.usuarioEmail = usuario.email;
     } else {
       res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
@@ -97,3 +100,10 @@ export async function loginUsuario(req, res) {
       res.status(500).json({ erro: 'Erro ao buscar jogos' });
     }
   }
+
+  export function verificarLogin(req, res, next) {
+  if (!global.usuarioEmail || global.usuarioEmail === "") {
+    return res.status(401).json({ mensagem: 'Usuário não autenticado' });
+  }
+  next();
+}

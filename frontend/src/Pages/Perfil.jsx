@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
   const { id } = useParams(); // aqui ele vai pega o id da url (usando a rota)
   const [usuario, setUsuario] = useState(null); //aqui armazena os dados do usuario
+  const navigate = useNavigate();
+
+
 
   useEffect(() => {
     async function buscarPerfil() {
       try {
-        const response = await fetch(`http://localhost:3001/perfil/${id}`);
-        const dados = await response.json();
+        const resposta = await fetch(`http://localhost:3001/perfil/${id}`);
+   if (resposta.status === 401) {
+          console.log('Usuário não autenticado, redirecionando para /login...');
+          navigate('/');
+          return;  // para não continuar a execução
+        }
+
+        const dados = await resposta.json();
         console.log('Dados recebidos do backend:', dados);
 
-        if (response.ok) {
+        if (resposta.ok) {
           setUsuario(dados[0]);
         } else {
           alert(dados.erro || 'Erro ao carregar perfil');

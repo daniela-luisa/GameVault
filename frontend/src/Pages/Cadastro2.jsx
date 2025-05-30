@@ -11,8 +11,8 @@ export default function Cadastro2() {
   useEffect(() => {
     async function carregarCategorias() {
       try {
-        const response = await fetch('http://localhost:3001/categorias');
-        const dados = await response.json();
+        const resposta = await fetch('http://localhost:3001/categorias');
+        const dados = await resposta.json();
         setCategorias(dados);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
@@ -37,8 +37,8 @@ export default function Cadastro2() {
         categorias: selecionadas
       })
     })
-      .then(response => {
-        if (response.ok) {
+      .then(resposta => {
+        if (resposta.ok) {
           alert("Categorias salvas com sucesso!");
           navigate('/home');
         } else {

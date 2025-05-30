@@ -88,6 +88,7 @@ export async function postnovaCategoria(req, res, next) {
   });
 };
 
+// get atualizar categoria
 export async function getatualizarCategoria (req,res,next) {
   const id_catego = req.params.id;
 
@@ -165,8 +166,8 @@ export async function excluirCategoria(req, res, next){
   }
 
   // valida se a categoria não possui videos
-  const totalVideos = await adminVerificarQtdJogosCategoria(id_catego);
-  if (totalVideos > 0)
+  const totalJogos = await adminVerificarQtdJogosCategoria(id_catego);
+  if (totalJogos > 0)
   {
     const categorias = await adminBuscarCategoriasJogos();
     return res.json({
