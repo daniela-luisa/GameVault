@@ -4,16 +4,6 @@ import { criarUsuario } from '../models/usuarioModel.js';
 
 
 
-//get usuarios
-// export async function getUsuarios(req, res) {
-//   try {
-//     const usuarios = await listarUsuarios();
-//     res.json(usuarios);
-//   } catch (error) {
-//     res.status(500).json({ erro: 'Erro ao buscar usuários' });
-//   }
-// }
-
 //get categorias
 export async function getCategorias(req, res, next){
   try {
@@ -72,6 +62,7 @@ export async function loginUsuario(req, res) {
   //post salvar as categorias pro usuario
   export async function salvarCategorias(req, res) {
     const { id_usuario, categorias } = req.body;  
+    console.log(req.body);
     try {
       await categoriaEscolhida(id_usuario, categorias);
       return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });
