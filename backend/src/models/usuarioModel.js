@@ -1,10 +1,10 @@
 import { conectar } from '../config/db.js';
 
-export async function listarUsuarios() {
-  const conexao = await conectar();
-  const [usuariosEncontrado] = await conexao.query('SELECT * FROM usuario');
-  return usuariosEncontrado;
-}
+// export async function listarUsuarios() {
+//   const conexao = await conectar();
+//   const [usuariosEncontrado] = await conexao.query('SELECT * FROM usuario');
+//   return usuariosEncontrado;
+// }
 
 export async function autenticarUsuario(email, senha) {
     const conexao = await conectar();
@@ -53,6 +53,8 @@ export async function buscarJogos(){
   const [jogos] = await conexao.query('select * from jogo');
   return jogos;
 }
+
+
 
 
 

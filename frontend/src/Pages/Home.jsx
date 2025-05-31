@@ -1,21 +1,29 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Home() {
   const id_usuario = localStorage.getItem('id_usuario');
   console.log("ID do usuário logado:", id_usuario); 
   const [jogos, setJogos] = useState([]); 
   const [categorias, setCategorias] = useState([]);
-
-  
+  const navigate = useNavigate();
 
 useEffect(() => {
   async function carregarJogos() {
     try {
-      const response = await fetch('http://localhost:3001/jogos');
-      const dados = await response.json();
-      console.log(dados)
+      const resposta = await fetch('http://localhost:3001/jogos');
+
+  if (resposta.status === 401) {
+          console.log('Usuário não autenticado, redirecionando para /...');
+          navigate('/');
+          return;  // para não continuar a execução
+        }
+
+      const dados = await resposta.json();
+      console.log('jogos:',dados)
       setJogos(dados);
     } catch (error) {
       console.error('Erro ao buscar jogos:', error);
@@ -27,8 +35,15 @@ useEffect(() => {
 useEffect(() => {
   async function carregarCategorias() {
     try {
-      const response = await fetch('http://localhost:3001/categorias');
-      const dados = await response.json();
+      const resposta = await fetch('http://localhost:3001/categorias');
+  if (resposta.status === 401) {
+          console.log('Usuário não autenticado, redirecionando para /...');
+          navigate('/');
+          return;  // para não continuar a execução
+        }
+
+      const dados = await resposta.json();
+      console.log('categorias:', dados);
       setCategorias(dados);
     } catch (error) {
       console.error('Erro ao buscar categorias:', error);
@@ -64,7 +79,7 @@ useEffect(() => {
       <h2>Categorias</h2>
       <ul>
         {categorias.map((categoria) => (
-          <li key={categoria.id_categoria}>
+          <li key={categoria.id_catego}>
             <p>{categoria.nome}</p></li>
         ))}
       </ul>

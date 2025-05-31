@@ -46,14 +46,13 @@ export default function Login() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-white text-5xl font-bold tracking-widest" style={{ fontFamily: "Acme" }}>LOGIN</h1>
           <div className="flex items-center gap-2">
-            {/* Coloque seu logo aqui, se quiser */}
             <img src="../Game-removebg-preview.png" alt="Game Vault Logo" className="h-18" />
           </div>
         </div>
 
         <form onSubmit={Login} className="gap-6 p-8">
           <div className="flex flex-col">
-            <label className="text-white mb-1">Informe seu emial</label>
+            <label className="text-white mb-1">Informe seu email</label>
             <input type="email"
               placeholder="Digite seu email"
               value={email}

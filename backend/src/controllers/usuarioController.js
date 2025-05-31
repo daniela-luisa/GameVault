@@ -1,18 +1,8 @@
-import { buscarCategorias, listarUsuarios, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
+import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario } from '../models/usuarioModel.js';
 
 
-
-//get usuarios
-export async function getUsuarios(req, res) {
-  try {
-    const usuarios = await listarUsuarios();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ erro: 'Erro ao buscar usuários' });
-  }
-}
 
 //get categorias
 export async function getCategorias(req, res, next){
@@ -45,6 +35,9 @@ export async function loginUsuario(req, res) {
 
     if (usuario) {
       res.json({ mensagem: 'Login bem-sucedido', usuario });
+      
+     global.usuarioCodigo = usuario.id_usuario;
+     global.usuarioEmail = usuario.email;
     } else {
       res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
@@ -72,6 +65,7 @@ export async function loginUsuario(req, res) {
   //post salvar as categorias pro usuario
   export async function salvarCategorias(req, res) {
     const { id_usuario, categorias } = req.body;  
+    console.log(req.body);
     try {
       await categoriaEscolhida(id_usuario, categorias);
       return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });
@@ -106,3 +100,10 @@ export async function loginUsuario(req, res) {
       res.status(500).json({ erro: 'Erro ao buscar jogos' });
     }
   }
+
+  export function verificarLogin(req, res, next) {
+  if (!global.usuarioEmail || global.usuarioEmail === "") {
+    return res.status(401).json({ mensagem: 'Usuário não autenticado' });
+  }
+  next();
+}
