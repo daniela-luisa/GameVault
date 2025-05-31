@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +29,6 @@ export default function Cadastro2() {
       setSelecionadas([...selecionadas, id]);
     }
   };
-
   const enviarCategorias = () => {
     fetch('http://localhost:3001/salvar-categorias', {
       method: 'POST',
@@ -91,6 +91,7 @@ export default function Cadastro2() {
             <div className="flex absolute justify-center w-full pointer-events-none">
               <button
                 type="submit"
+                onClick={enviarCategorias}
                 className="bg-green-500 hover:bg-green-600 text-white py-2 px-8 rounded-md text-2xl flex items-center gap-2 transition pointer-events-auto"
                 style={{ fontFamily: "Acme" }}>
                 CONTINUAR

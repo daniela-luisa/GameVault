@@ -31,7 +31,7 @@ export async function buscarCategorias(){
 
 export async function categoriaEscolhida(id_usuario, categorias) {
   const conexao = await conectar(); 
-  const sql = 'INSERT INTO usu_categ_pref (id_usuario, id_catego) VALUES ?';
+  const sql = 'insert into usu_categ_pref (id_usuario, id_catego) values ?';
   const valores = categorias.map(categoriaId => [id_usuario, categoriaId]);
   await conexao.query(sql, [valores]);
 }
@@ -40,6 +40,18 @@ export async function buscarUsu_categ_pref(){
   const conexao = await conectar();
   const [listar] = await conexao.query('select * from usu_categ_pref');
   return listar;
+}
+
+export async function buscarUsuario(id){
+  const conexao = await conectar();
+  const usuario = await conexao.query('select * from usuario where id_usuario = ?', [id])
+  return usuario[0];
+}
+
+export async function buscarJogos(){
+  const conexao = await conectar();
+  const [jogos] = await conexao.query('select * from jogo');
+  return jogos;
 }
 
 
