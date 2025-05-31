@@ -43,16 +43,24 @@ export default function Perfil() {
 
   return (
     
-    <div>
-         <nav>
-        <ul>
-          <li><Link to="/home">Início</Link></li>
-          <li><Link to="/favoritos">Favoritos</Link></li>
-          <li><Link to={`/perfil/${id}`}>Perfil</Link></li>
-        </ul>
+    <div className="min-h-screen bg-gradient-to-b from-[#000A05] via-[#002211] to-[#003F1F] text-white">
+       <nav className="bg-black flex justify-between items-center px-6 py-4 text-sm font-semibold text-white">
+        <div className="flex items-center space-x-6">
+          <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
+          <a href="/home" className="hover:text-green-500">Inicio</a>
+          <a href="/favoritos" className="hover:text-green-500">Favoritos</a>
+          <a href={`/perfil/${id}`} className="hover:text-green-500 text-green-500">Perfil</a>
+        </div>
       </nav>
-      <h1>Perfil de {usuario.nome}</h1>
+
+      <div className="flex items-center justify-center p-10">
+        <div>
+            <h1 className="text-2xl font-bold">Perfil de {usuario.nome}</h1>
       <p>Nome de usuário: {usuario.nick}</p>
+        </div>
+            
+      </div>
+
     </div>
   );
 }
