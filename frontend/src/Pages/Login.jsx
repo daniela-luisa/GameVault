@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,7 +61,7 @@ export default function Login() {
               className="bg-gray-800 text-white placeholder-gray-400 p-1.5 rounded-md mb-6" />
           </div>
           <div className="flex flex-col">
-            <label className="text-white mb-1">Informe seu email</label>
+            <label className="text-white mb-1">Informe sua senha</label>
             <input type="password"
               placeholder="Digite sua senha"
               value={senha}
