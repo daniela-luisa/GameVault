@@ -1,4 +1,4 @@
-import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria} from '../models/adminModel.js';
+import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario} from '../models/adminModel.js';
 
 export async function loginAdmin(req, res) {
   const { email, senha } = req.body;
@@ -15,15 +15,6 @@ export async function loginAdmin(req, res) {
     }
   } catch (error) {
     res.status(500).json({ erro: 'Erro ao fazer login de admin'});
-  }
-}
-
-export async function getUsuarios(req, res) {
-  try {
-    const usuarios = await listarUsuarios();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ erro: 'Erro ao listar usuários', detalhes: error.message });
   }
 }
 
@@ -157,7 +148,7 @@ export async function excluirCategoria(req, res, next){
   if (!categoria)
   {
     const categorias = await adminBuscarCategoriasJogos();
-    return res.jason({
+    return res.json({
       admNome : global.admNome,
       categorias,
       mensagem : "Categoria não existe.",
@@ -201,3 +192,105 @@ if (totalPreferencias > 0) {
     sucesso : true
   });
 };
+
+//---------------------------------
+
+// GERENCIAMENTO USUARIOS
+
+//----------------------------------
+
+// get da pagina de usuario
+export async function getUsuarios(req, res){
+try {
+    const usuarios = await listarUsuarios();   
+  //const preferencias = await buscarPreferencias(usuario[0]?.id_usuario || 0); // Padrão para as pref. do primeiro usuário
+    res.json({
+      admNome: global.admNome,
+      usuarios,
+  //  preferencias,
+      mensagem: null,
+      sucesso: false,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      usuarios: [],
+  //  perfis: [],
+      mensagem: 'Erro ao carregar usuários.',
+      sucesso: false,
+    });
+  }
+}
+
+// get da pagina de novo usuario
+export function getNovoUsuario(req,res){
+  res.json({
+    admNome: global.admNome,
+    mensagem: null,
+    sucesso: false,
+  });
+}
+
+/* POST novo usuário */
+export async function postNovoUsuario(req, res){
+      const { nome, nomeUsuario, dtNascimento, email, senha } = req.body;
+  if (!email || !senha || !nome || !nomeUsuario || !dtNascimento) {
+    return res.json({
+      admNome: global.admNome,
+      mensagem: 'Todos os campos são obrigatórios.',
+      sucesso: false,
+    });
+  }
+
+  const nomeUsuarioExistente = await buscarNomeUsuario(nomeUsuario);
+  if(nomeUsuarioExistente){
+    return res.json({
+      admNome: global.admNome,
+      mensagem: 'Nome de usuario ja existe',
+      sucesso: false,
+    });
+  }
+  try {
+    await adminInserirUsuario(nome, nomeUsuario, dtNascimento, email, senha);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Usuário cadastrado com sucesso!',
+      sucesso: true,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Erro ao Inserir usuário.',
+      sucesso: false,
+    });
+  }
+}
+
+/* GET excluir usuário */
+export async function excluirUsuario(req,res){
+ const id = req.params.id;
+  try {
+    await adminExcluirUsuario(id);
+    const usuarios = await listarUsuarios();
+    return res.json({
+    admNome : global.admNome,
+    usuarios,
+    mensagem : "Usuario excluido com sucesso.",
+    sucesso : true
+  });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      usuarios: await listarUsuarios(),
+      mensagem: erro.message || 'Erro ao excluir usuário.',
+      sucesso: false,
+    });
+  }
+}
+ 

@@ -10,7 +10,7 @@ export async function autenticarAdmin(email, senha) {
 
 export async function listarUsuarios() {
   const conexao = await conectar();
-  const [usuariosEncontrado] = await conexao.query('select * from usuario');
+  const [usuariosEncontrado] = await conexao.query('select * from usuario order by email');
   return usuariosEncontrado;
 }
 
@@ -70,9 +70,32 @@ export async function adminExcluirCategoria(codigo){
 }
 export async function adminExistePreferenciaCategoria(codigo) {
     const conexao = await conectar();
-    const sql = `SELECT COUNT(*) AS total FROM usu_categ_pref WHERE id_catego = ?;`;
+    const sql = `select count(*) as total from usu_categ_pref where id_catego = ?;`;
     
     const [result] = await conexao.query(sql, [codigo]);
 
-    return result[0].total > 0;  // Retorna true se existe, false se não.
+    return result[0].total > 0; 
+}
+
+export async function adminInserirUsuario(nome, nomeUsuario, dtNascimento, email, senha){
+    const conexao = await conectar();
+    const sql = 'insert into usuario(nome, nick, dt_nasc, email, senha) values (?,?,?,?,?)';
+    await conexao.query(sql, [nome, nomeUsuario, dtNascimento, email, senha]);
+}
+export async function buscarNomeUsuario(nomeUsuario){
+    const conexao = await conectar();
+    const sql = 'select * from usuario where nick = ?';
+      const [resultado] = await conexao.query(sql, [nomeUsuario]);
+    return resultado.length > 0 ? resultado[0] : null;
+}
+
+export async function adminExcluirUsuario(id_usuario){
+  const conexao = await conectar();
+  const sqlCheck = "select count(*) as total from usu_categ_pref where id_usuario = ?;";
+  const [result] = await conexao.query(sqlCheck, [id_usuario]);
+  if (result[0].total > 0) {
+    throw new Error("Impossível apagar usuário com preferências associados. Apague as preferencias primeiro.");
+  }
+  const sql = "delete from usuario where id_usuario = ?;";
+  await conexao.query(sql, [id_usuario]);
 }
