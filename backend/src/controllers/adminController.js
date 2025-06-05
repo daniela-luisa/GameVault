@@ -1,4 +1,4 @@
-import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario} from '../models/adminModel.js';
+import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario} from '../models/adminModel.js';
 
 export async function loginAdmin(req, res) {
   const { email, senha } = req.body;
@@ -270,6 +270,69 @@ export async function postNovoUsuario(req, res){
   }
 }
 
+// GET editar usuario
+export async function getAtualizarUsuario(req, res){
+const id_usuario = req.params.id;
+  try {
+    const usuario = await adminBuscarUsuarioPorCodigo(id_usuario); 
+    if (!usuario) {
+      return res.json({
+        admNome: global.admNome,
+        mensagem: 'Usuário não encontrado.',
+        sucesso: false,
+      });
+    }
+    res.json({
+      admNome: global.admNome,
+      usuario,
+      mensagem: null,
+      sucesso: false,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Erro ao carregar usuário.',
+      sucesso: false,
+    });
+  }
+}
+
+
+/* POST alteração de usuário */
+export async function postAtualizarUsuario(req, res) {
+ const id_usuario = req.params.id;
+ const { nome, nomeUsuario, dtNascimento, email, senha } = req.body;
+  if (!email || !senha || !nome || !nomeUsuario || !dtNascimento) {
+    return res.json({
+      admNome: global.admNome,
+      usuario: { id_usuario,nome: nome, nick: nomeUsuario,dt_nasc : dtNascimento, email: email, senha: senha },
+      mensagem: 'Todos os campos são obrigatórios.',
+      sucesso: false,
+    });
+  }
+  try {
+    await adminAtualizarUsuario(id_usuario, nome, nomeUsuario, dtNascimento, email, senha);
+    res.json({
+      admNome: global.admNome,
+      usuario: { id_usuario,nome: nome, nick: nomeUsuario, dt_nasc : dtNascimento, email: email, senha: senha },
+      mensagem: 'Usuário atualizado com sucesso!',
+      sucesso: true,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      usuario: { id_usuario,nome: nome, nick: nomeUsuario,dt_nasc : dtNascimento, email: email, senha: senha },
+      mensagem: 'Erro ao atualizar usuário.',
+      sucesso: false,
+    });
+  }
+}
+
+
 /* GET excluir usuário */
 export async function excluirUsuario(req,res){
  const id = req.params.id;
@@ -284,7 +347,7 @@ export async function excluirUsuario(req,res){
   });
   } 
   catch (erro) {
-    console.error(erro);
+    // console.error(erro);
     res.json({
       admNome: global.admNome,
       usuarios: await listarUsuarios(),

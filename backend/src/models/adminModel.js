@@ -89,6 +89,19 @@ export async function buscarNomeUsuario(nomeUsuario){
     return resultado.length > 0 ? resultado[0] : null;
 }
 
+export async function adminBuscarUsuarioPorCodigo(usuario){
+    const conexao = await conectar();
+    const sql = "select * from usuario where id_usuario = ?;";
+    const [usuarioEcontrado] = await conexao.query(sql,[usuario]);
+    return usuarioEcontrado && usuarioEcontrado.length>0 ? usuarioEcontrado[0] : {};
+}
+
+export async function adminAtualizarUsuario(id_usuario, nome, nomeUsuario, dtNascimento, email, senha) {
+  const conexao = await conectar();
+  const sql = "update usuario set nome=?, nick=?, dt_nasc=?, email = ?, senha = ? where id_usuario = ?;";
+  await conexao.query(sql, [nome, nomeUsuario, dtNascimento, email, senha, id_usuario]);
+}
+
 export async function adminExcluirUsuario(id_usuario){
   const conexao = await conectar();
   const sqlCheck = "select count(*) as total from usu_categ_pref where id_usuario = ?;";
