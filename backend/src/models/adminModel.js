@@ -112,3 +112,18 @@ export async function adminExcluirUsuario(id_usuario){
   const sql = "delete from usuario where id_usuario = ?;";
   await conexao.query(sql, [id_usuario]);
 }
+
+//-------------------------
+
+export async function buscarPreferencias(usuario){
+    const conexao = await conectar();
+    const sql = " select c.nome, f.id_usuario, f.id_catego from categoria c inner join usu_categ_pref f on f.id_catego = c.id_catego where f.id_usuario = ?";
+    const [preferenciasEcontrados] = await conexao.query(sql,[usuario]);
+    return preferenciasEcontrados;
+}
+
+export async function deletarPreferencia(id_usuario, id_categoria) {
+  const conexao = await conectar();
+  const sql = "delete from usu_categ_pref where id_usuario = ? and id_catego = ?";
+  await conexao.query(sql, [id_usuario, id_categoria]);
+}

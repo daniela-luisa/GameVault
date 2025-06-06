@@ -1,4 +1,6 @@
-import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario} from '../models/adminModel.js';
+import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia} from '../models/adminModel.js';
+
+import {categoriaEscolhida} from '../models/usuarioModel.js';
 
 export async function loginAdmin(req, res) {
   const { email, senha } = req.body;
@@ -203,11 +205,11 @@ if (totalPreferencias > 0) {
 export async function getUsuarios(req, res){
 try {
     const usuarios = await listarUsuarios();   
-  //const preferencias = await buscarPreferencias(usuario[0]?.id_usuario || 0); // Padrão para as pref. do primeiro usuário
+  const preferencias = await buscarPreferencias(usuarios[0]?.id_usuario || 0); // Padrão para as pref. do primeiro usuário
     res.json({
       admNome: global.admNome,
       usuarios,
-  //  preferencias,
+      preferencias,
       mensagem: null,
       sucesso: false,
     });
@@ -217,7 +219,7 @@ try {
     res.json({
       admNome: global.admNome,
       usuarios: [],
-  //  perfis: [],
+      preferencias: [],
       mensagem: 'Erro ao carregar usuários.',
       sucesso: false,
     });
@@ -356,4 +358,96 @@ export async function excluirUsuario(req,res){
     });
   }
 }
- 
+
+//-------------------
+
+//PREFERENCIAS
+
+//------------------
+
+//Get de preferencias 
+export async function getPreferencias(req, res) {
+  const id_usuario = req.params.id;
+  try {
+    const usuarios = await listarUsuarios();
+    const preferencias = await buscarPreferencias(id_usuario);
+
+    res.json({
+      admNome: global.admNome,
+      usuarios,
+      preferencias,
+      selectedUsuario: parseInt(id_usuario),
+      mensagem: null,
+      sucesso: true,
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      usuarios: [],
+      preferencias: [],
+      mensagem: 'Erro ao carregar preferências.',
+      sucesso: false,
+    });
+  }
+}
+
+//get de nova preferencia
+export function getNovaPreferencia(req, res) {
+ const id_usuario  = req.params.id;
+  res.json({
+    admNome: global.admNome,
+    id_usuario,
+    mensagem: null,
+    sucesso: false,
+  });
+}
+
+//post de nova preferencia
+export async function postNovaPreferencia(req, res) {
+  const id_usuario = req.params.id;
+  const { categorias } = req.body;
+  try {
+    await categoriaEscolhida(id_usuario, categorias); 
+    res.json({ 
+      admNome: global.admNome,
+      id_usuario,
+      mensagem: 'Preferências salvas com sucesso!',
+      sucesso: false
+    });
+  } catch (erro) {
+   console.error("Erro detalhado:", erro);
+res.status(500).json({
+  erro: 'Erro ao salvar preferências.',
+  detalhes: erro.message || erro.sqlMessage || 'Erro desconhecido.'
+});
+  }
+}
+
+/* GET delete profile */
+export async function excluirPreferencia(req, res) {
+  const { id_usuario, id_categoria } = req.params;
+
+  try {
+    await deletarPreferencia(id_usuario, id_categoria);
+    res.json({
+      admNome: global.admNome,
+      usuarios: await listarUsuarios(),
+      preferencias : await buscarPreferencias(id_usuario),
+      mensagem: 'Preferência excluída com sucesso.',
+      sucesso: true
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      usuarios: await listarUsuarios(),
+      preferencias: [],
+      mensagem: 'Erro ao excluir preferencia.',
+      sucesso: false,
+    });
+  }
+}
+
+
+
