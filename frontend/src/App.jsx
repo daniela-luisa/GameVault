@@ -14,6 +14,9 @@ import Jogos from './Pages/admin/Jogos';
 import Categorias from './Pages/admin/Categorias';
 import NovaCategoria from './Pages/admin/Nova_categoria';
 import AtualizarCategoria from './Pages/admin/Atualizar_categoria';
+import AtualizarUsuario from './Pages/admin/Atualizar_usuario';
+import NovoUsuario from './Pages/admin/Novo_usuario';
+import NovaPreferencia from './Pages/admin/nova_preferencia';
 
 
 function App() {
@@ -29,11 +32,17 @@ function App() {
 
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
+
         <Route path="/admin/usuarios" element={<Usuarios />} />
+        <Route path="/admin/novo-usuario" element={<NovoUsuario />} />
+        <Route path= "/admin/atualizar-usuario/:id" element={< AtualizarUsuario/>} />
+        <Route path="/admin/nova-preferencia/:id" element={<NovaPreferencia />} />
+
         <Route path="/admin/jogos" element={<Jogos />} />
         <Route path="/admin/categorias" element={<Categorias />} />
         <Route path="/admin/nova-categoria" element={<NovaCategoria />} />
         <Route path="/admin/atualizar-categoria/:id" element={<AtualizarCategoria/>} />
+
         
       </Routes>
     </BrowserRouter>

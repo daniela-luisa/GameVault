@@ -4,8 +4,8 @@ export default function Jogos() {
       <nav className="bg-black flex justify-between items-center px-6 py-4 text-sm font-semibold text-white">
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
-          <a href="/admin/dashboard" className="hover:text-green-500 text-green-500">Dashboard</a>
-          <a href="/admin/jogos" className="hover:text-green-500">Jogos</a>
+          <a href="/admin/dashboard" className="hover:text-green-500">Dashboard</a>
+          <a href="/admin/jogos" className="hover:text-green-500 text-green-500">Jogos</a>
           <a href="/admin/usuarios" className="hover:text-green-500">Usuários</a>
           <a href="/admin/categorias" className="hover:text-green-500">Categorias</a>
         </div>

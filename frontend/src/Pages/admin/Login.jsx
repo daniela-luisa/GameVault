@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [msg, setMsg] = useState("");
+
    const navigate = useNavigate();
 
   async function login(e) {

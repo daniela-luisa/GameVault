@@ -1,6 +1,6 @@
 import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia} from '../models/adminModel.js';
 
-import {categoriaEscolhida} from '../models/usuarioModel.js';
+import {buscarCategorias, categoriaEscolhida} from '../models/usuarioModel.js';
 
 export async function loginAdmin(req, res) {
   const { email, senha } = req.body;
@@ -204,7 +204,7 @@ if (totalPreferencias > 0) {
 // get da pagina de usuario
 export async function getUsuarios(req, res){
 try {
-    const usuarios = await listarUsuarios();   
+  const usuarios = await listarUsuarios();   
   const preferencias = await buscarPreferencias(usuarios[0]?.id_usuario || 0); // Padrão para as pref. do primeiro usuário
     res.json({
       admNome: global.admNome,
@@ -393,14 +393,26 @@ export async function getPreferencias(req, res) {
 }
 
 //get de nova preferencia
-export function getNovaPreferencia(req, res) {
+export async function getNovaPreferencia(req, res) {
  const id_usuario  = req.params.id;
-  res.json({
-    admNome: global.admNome,
-    id_usuario,
-    mensagem: null,
-    sucesso: false,
-  });
+  try {
+    const categorias = await buscarCategorias();
+    const preferencias = await buscarPreferencias(id_usuario);
+    res.json({
+      admNome: global.admNome,
+      id_usuario,
+      categorias,
+      preferencias,
+      mensagem: null,
+      sucesso: true
+    });
+  } catch (erro) {
+    console.error('Erro ao buscar categorias:', erro);
+    res.status(500).json({
+      mensagem: 'Erro ao carregar categorias.',
+      sucesso: false,
+    });
+  }
 }
 
 //post de nova preferencia
@@ -413,7 +425,7 @@ export async function postNovaPreferencia(req, res) {
       admNome: global.admNome,
       id_usuario,
       mensagem: 'Preferências salvas com sucesso!',
-      sucesso: false
+      sucesso: true
     });
   } catch (erro) {
    console.error("Erro detalhado:", erro);
@@ -424,7 +436,7 @@ res.status(500).json({
   }
 }
 
-/* GET delete profile */
+/* GET delete preferencias */
 export async function excluirPreferencia(req, res) {
   const { id_usuario, id_categoria } = req.params;
 
