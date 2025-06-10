@@ -48,6 +48,12 @@ export async function buscarUsuario(id){
   return usuario[0];
 }
 
+export async function inserirFoto(id, foto){
+  const conexao = await conectar();
+  const sql = 'update usuario set foto = ? where id_usuario = ?;';
+  await conexao.query(sql, [foto, id]);
+}
+
 export async function buscarJogos(){
   const conexao = await conectar();
   const [jogos] = await conexao.query('select * from jogo');

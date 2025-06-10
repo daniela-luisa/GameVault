@@ -1,8 +1,6 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
-import { criarUsuario } from '../models/usuarioModel.js';
-
-
+import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
 //get categorias
 export async function getCategorias(req, res, next){
@@ -90,6 +88,17 @@ export async function loginUsuario(req, res) {
       console.error('Erro ao buscar o usuário:', error);
     }
   }
+
+//post para upload da foto de perfil
+export async function uploadPerfil(req, res, next){
+  const { id } = req.params;
+  const foto = req.file ? req.file.filename : null;
+
+  if (!foto) return res.status(400).json({ erro: 'Arquivo não enviado' });
+ await inserirFoto(id, foto);
+res.json({foto});
+
+}
 
   export async function getJogos (req, res, next){
     try{
