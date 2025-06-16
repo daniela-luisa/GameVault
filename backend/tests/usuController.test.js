@@ -8,6 +8,7 @@ import { expect, jest } from '@jest/globals';
   const mockBuscarUsuario = jest.fn();
   const mockBuscarJogos = jest.fn();
   const mockCriarUsuario = jest.fn();
+  const mockInserirFoto = jest.fn();
 
   jest.unstable_mockModule('../src/models/usuarioModel.js', () => ({
     buscarCategorias: mockBuscarCategorias,
@@ -16,7 +17,8 @@ import { expect, jest } from '@jest/globals';
     autenticarUsuario: mockAutenticarUsuario,
     buscarUsuario: mockBuscarUsuario,
     buscarJogos: mockBuscarJogos,
-    criarUsuario: mockCriarUsuario
+    criarUsuario: mockCriarUsuario,
+    inserirFoto: mockInserirFoto
   }));
 
   //Importar o controller depois do mock
@@ -27,6 +29,7 @@ import { expect, jest } from '@jest/globals';
   const { getUsu_categ_pref } = await import ('../src/controllers/usuarioController.js');
   const { getUsuario } = await import ('../src/controllers/usuarioController.js');
   const { getJogos} = await import ('../src/controllers/usuarioController.js');
+  const { uploadPerfil} = await import ('../src/controllers/usuarioController.js');
 
   beforeEach(() => {
   jest.clearAllMocks();  // Limpa os mocks antes de cada teste
@@ -95,6 +98,17 @@ import { expect, jest } from '@jest/globals';
   expect(mockCategoriaEscolhida).toHaveBeenCalledWith(1, [1,2,3]);
   expect(res.json).toHaveBeenCalledWith({ mensagem: 'Categorias salvas com sucesso!' });
   })
+     it('deve retornar erro 500 ao lançar exceção', async () => {
+    mockCategoriaEscolhida.mockRejectedValue(new Error('Falha no banco'));
+
+    const req ={ body: {id_usuario: 1, categorias: [1,2,3]}};
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+    await salvarCategorias(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ erro: 'Erro ao salvar categorias', detalhes: 'Falha no banco' });
+  });
 })
 
 // teste pra logar usuario
@@ -112,6 +126,29 @@ import { expect, jest } from '@jest/globals';
   expect(mockAutenticarUsuario).toHaveBeenCalledWith('dani@gmail.com', '123');
   expect(res.json).toHaveBeenCalledWith({mensagem: "Login bem-sucedido", usuario: { id: 1, nome: "Daniela" }});
 });
+ it('deve retornar 401 se não conseguir logar usuário', async () => {
+  mockAutenticarUsuario.mockResolvedValue(null);
+
+  const req = { body: {email: 'dani@gmail.com', senha: '123'}};
+  const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+  await loginUsuario(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(401);
+  expect(res.json).toHaveBeenCalledWith({ erro: 'Email ou senha inválidos' });
+});
+   it('deve retornar erro 500 ao lançar exceção', async () => {
+  mockAutenticarUsuario.mockRejectedValue(new Error('Falha no banco'));
+
+  const req = { body: {email: 'dani@gmail.com', senha: '123'}};
+  const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+  await loginUsuario(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.json).toHaveBeenCalledWith({ erro:  'Erro ao fazer login'});
+  });
+
   });
 
 //--------------------------------
@@ -185,17 +222,29 @@ describe ('Teste getJogos', () => {
   });
 });
 
-// testes de erro-------------------------------------------
+//------------------------------------------------
+describe('Teste do uploadPerfil', () => {
+  it('deve salvar a foto de perfil com sucesso', async () => {
+    const req = {params: { id: 1 },file: { filename: 'foto_perfil.png' }};
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+    const next = jest.fn();
 
-// describe('Teste de erro no cadastroUsuario', () => {
- 
-// });
+    await uploadPerfil(req, res, next);
 
-//----------------------------------------
+    expect(mockInserirFoto).toHaveBeenCalledWith(1, 'foto_perfil.png');
+    expect(res.json).toHaveBeenCalledWith({ foto: 'foto_perfil.png' });
+  });
 
-//----------------------------------------
-// describe('Teste de erro no login', () => {
-//   it('deve retornar erro 500 ao lançar exceção', async () => {
-    
-//   });
-// });
+  it('deve retornar erro 400 se nenhum arquivo for enviado', async () => {
+    const req = {params: { id: 1 }, file: null};
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+    const next = jest.fn();
+
+    await uploadPerfil(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ erro: 'Arquivo não enviado' });
+    expect(mockInserirFoto).not.toHaveBeenCalled();
+  });
+});
+

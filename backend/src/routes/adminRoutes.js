@@ -7,14 +7,14 @@ router.post('/login', loginAdmin);
 
 //Categorias
 router.get('/categorias', getCategorias);
-router.get('/nova-categoria', getnovaCategoria);
+router.get('/nova-categoria', getnovaCategoria);// testado
 router.post('/nova-categoria', postnovaCategoria);
 router.get('/atualizar-categoria/:id', getatualizarCategoria);
 router.post('/atualizar-categoria/:id', postAtualizarCategoria);
 router.get('/excluir-categoria/:id', excluirCategoria);
 
 //Usuarios
-router.get('/usuarios', getUsuarios);
+router.get('/usuarios', getUsuarios);//testado
 //----------
 router.get('/novo-usuario',getNovoUsuario);
 router.post('/novo-usuario', postNovoUsuario);
