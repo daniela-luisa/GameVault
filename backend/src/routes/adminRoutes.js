@@ -6,23 +6,23 @@ const router = express.Router();
 router.post('/login', loginAdmin);
 
 //Categorias
-router.get('/categorias', getCategorias);
-router.get('/nova-categoria', getnovaCategoria);// testado
-router.post('/nova-categoria', postnovaCategoria);
-router.get('/atualizar-categoria/:id', getatualizarCategoria);
-router.post('/atualizar-categoria/:id', postAtualizarCategoria);
-router.get('/excluir-categoria/:id', excluirCategoria);
+router.get('/categorias', getCategorias);//testado
+router.get('/nova-categoria', getnovaCategoria);//testado
+router.post('/nova-categoria', postnovaCategoria);// testado
+router.get('/atualizar-categoria/:id', getatualizarCategoria);// testado
+router.post('/atualizar-categoria/:id', postAtualizarCategoria);// testado
+router.get('/excluir-categoria/:id', excluirCategoria);// nn consegui, comentado
 
 //Usuarios
 router.get('/usuarios', getUsuarios);//testado
 //----------
-router.get('/novo-usuario',getNovoUsuario);
-router.post('/novo-usuario', postNovoUsuario);
-router.get('/atualizar-usuario/:id', getAtualizarUsuario)
-router.post('/atualizar-usuario/:id', postAtualizarUsuario)
+router.get('/novo-usuario',getNovoUsuario);//testado
+router.post('/novo-usuario', postNovoUsuario);//testado
+router.get('/atualizar-usuario/:id', getAtualizarUsuario);//testado, menos o tratamento de erro
+router.post('/atualizar-usuario/:id', postAtualizarUsuario);
 router.get('/excluir-usuario/:id', excluirUsuario);
 //--------------
-router.get('/preferencias/:id', getPreferencias);
+router.get('/preferencias/:id', getPreferencias);//testado, com o erro nn aprovado no teste
 router.get('/nova-preferencia/:id', getNovaPreferencia);
 router.post('/nova-preferencia/:id', postNovaPreferencia);
 router.get('/excluir-preferencia/:id_usuario/:id_categoria', excluirPreferencia);

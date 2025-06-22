@@ -48,7 +48,6 @@ export async function getnovaCategoria(req, res, next) {
 };
 
 export async function postnovaCategoria(req, res, next) {
- 
   const {nome} = req.body;
 
   // validação de campos vazios
@@ -121,6 +120,8 @@ export async function postAtualizarCategoria(req, res, next) {
 
   // validação de nome duplicado
   const categoriaExistente = await adminBuscarCategoria(nome);
+  console.log('Categoria encontrada:', categoriaExistente);
+console.log('ID recebido:', id_catego);
   if (categoriaExistente && categoriaExistente.id_catego!=id_catego)
   {
     return res.json({
