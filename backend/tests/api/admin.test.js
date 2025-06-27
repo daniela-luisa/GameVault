@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app.js'; 
+
 //------------------------------------------------------------------------------------------
 
 describe('GET /admin/usuarios', () => {
@@ -98,7 +99,7 @@ describe('POST /admin/atualizar-categoria/:id', () => {
 });
 //------------------------------------------------------------------------------------------
 describe('GET /admin/novo-usuario', () => {
-  it('Deve retornar os dados iniciais para o formulário de novo usuário', async () => {
+  it('Deve retornar os dados iniciais para a pagina de novo usuario', async () => {
     const res = await request(app).get('/admin/novo-usuario');
 
     expect(res.statusCode).toBe(200);
@@ -164,7 +165,8 @@ describe('GET /admin/preferencias/:id', () => {
     const idUsuarioInvalido = 999999; // Um ID que provavelmente não existe
 
     const res = await request(app).get(`/admin/preferencias/${idUsuarioInvalido}`);
-
+    console.log("idInvalido:", idUsuarioInvalido);    
+    
     // Esperado: ainda retorna status 200, mas sucesso: false
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('sucesso', false);
@@ -172,34 +174,3 @@ describe('GET /admin/preferencias/:id', () => {
   });
 });
 //------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-// describe('GET /admin/excluir-categoria/:id', () => {
-//   let categoriaTesteId;
-//   // Cria uma categoria temporária antes do teste
-//   beforeAll(async () => {
-//     const res = await request(app)
-//       .post('/admin/nova-categoria')
-//       .send({ nome: 'Categoria Temporária p/ Exclusão' });
-//     // Supondo que o ID venha no corpo da resposta (ajuste se necessário)
-//     categoriaTesteId = res.body.id || 999; // ou extraia corretamente do banco
-//   });
-//   it('Deve excluir a categoria com sucesso', async () => {
-//     const res = await request(app).get(`/admin/excluir-categoria/${categoriaTesteId}`);
-//     expect(res.statusCode).toBe(200);
-//     expect(res.body).toHaveProperty('mensagem', 'Categoria excluida com sucesso.');
-//     expect(res.body).toHaveProperty('sucesso', true);
-//   });
-// });
-
-
-

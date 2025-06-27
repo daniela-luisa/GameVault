@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.03% </span>
+                <span class="strong">57.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>35/66</span>
+                <span class='fraction'>38/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/16</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.94% </span>
+                <span class="strong">58.82% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/17</span>
+                <span class='fraction'>10/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.3% </span>
+                <span class="strong">56.92% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/65</span>
+                <span class='fraction'>37/65</span>
             </div>
         
             
@@ -202,9 +202,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -271,9 +271,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -309,10 +309,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -398,23 +398,23 @@ export async function <span class="fstat-no" title="function not covered" >admin
 <span class="cstat-no" title="statement not covered" >    return result[0].total &gt; 0; </span>
 }
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >adminInserirUsuario(</span>nome, nomeUsuario, dtNascimento, email, senha){
-    const conexao = <span class="cstat-no" title="statement not covered" >await conectar();</span>
-    const sql = <span class="cstat-no" title="statement not covered" >'insert into usuario(nome, nick, dt_nasc, email, senha) values (?,?,?,?,?)';</span>
-<span class="cstat-no" title="statement not covered" >    await conexao.query(sql, [nome, nomeUsuario, dtNascimento, email, senha]);</span>
+export async function adminInserirUsuario(nome, nomeUsuario, dtNascimento, email, senha){
+    const conexao = await conectar();
+    const sql = 'insert into usuario(nome, nick, dt_nasc, email, senha) values (?,?,?,?,?)';
+    await conexao.query(sql, [nome, nomeUsuario, dtNascimento, email, senha]);
 }
 export async function buscarNomeUsuario(nomeUsuario){
     const conexao = await conectar();
     const sql = 'select * from usuario where nick = ?';
       const [resultado] = await conexao.query(sql, [nomeUsuario]);
-    return resultado.length &gt; 0 ? resultado[0] : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+    return resultado.length &gt; 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >resultado[0] </span>: null;
 }
 &nbsp;
 export async function adminBuscarUsuarioPorCodigo(usuario){
     const conexao = await conectar();
     const sql = "select * from usuario where id_usuario = ?;";
     const [usuarioEcontrado] = await conexao.query(sql,[usuario]);
-    return usuarioEcontrado &amp;&amp; usuarioEcontrado.length&gt;0 ? usuarioEcontrado[0] : {};
+    return usuarioEcontrado &amp;&amp; usuarioEcontrado.length&gt;0 ? usuarioEcontrado[0] : <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
 }
 &nbsp;
 export async function <span class="fstat-no" title="function not covered" >adminAtualizarUsuario(</span>id_usuario, nome, nomeUsuario, dtNascimento, email, senha) {
@@ -454,7 +454,7 @@ export async function <span class="fstat-no" title="function not covered" >delet
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T01:44:50.879Z
+                at 2025-06-27T05:35:06.851Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

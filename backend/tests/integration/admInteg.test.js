@@ -36,7 +36,7 @@ describe('Integração: Cadastro e leitura de usuário', () => {
 });
 //----------------------------------------------------------------------------------------------
 // precisa tbm deletar as coisas na tabela de categoria pra testar de novo
-describe('Integração completa: CRUD de categoria', () => {
+describe('Integração: CRUD de categoria', () => {
   let idCategoria;
 
   it('Deve criar uma nova categoria', async () => {
@@ -73,4 +73,5 @@ describe('Integração completa: CRUD de categoria', () => {
   });
 
 });
+
 
