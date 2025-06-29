@@ -10,6 +10,24 @@ export default function Home() {
   const [jogos, setJogos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const navigate = useNavigate();
+  const imagens = [
+    "images/Melhores-Jogos-de-Videogames.jpg",
+    "images/2.jpg",
+    "images/os-10-melhores-jogos-de-2018-na-opiniao-do-uol-jogos-1546887965085_v2_1920x1080.jpg",
+    "images/maxresdefault.jpg"
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % imagens.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+
 
   useEffect(() => {
     async function carregarJogos() {
@@ -64,10 +82,34 @@ export default function Home() {
         </div>
       </nav>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Bem-vindo ao Home</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-5xl font-bold">Bem-vindo ao Home</h1>
         </div>
       </div>
+
+
+      <div className="flex justify-center items-center my-5 max-h-[60vh] h-[60vh] overflow-hidden">
+        {[-1, 0, 1].map((offset) => {
+          const currentIndex = (index + offset + imagens.length) % imagens.length;
+          const isCenter = offset === 0;
+
+          return (
+            <img
+              key={currentIndex}
+              src={imagens[currentIndex]}
+              alt={`banner-${currentIndex}`}
+              className={`
+          transition-all duration-700 ease-in-out
+          object-contain
+          ${isCenter ? 'max-h-full z-5 scale-100' : 'max-h-[90%] opacity-50'}
+        `}
+            />
+          );
+        })}
+      </div>
+
+
+
       <div className="max-w-7xl mx-auto p-6">
         <div className="flex mb-6 gap-20">
           <div>

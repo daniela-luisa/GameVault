@@ -2,7 +2,12 @@ import express from 'express';
 import { loginUsuario, cadastroUsuario, getCategorias, salvarCategorias, uploadPerfil} from '../controllers/usuarioController.js';
 import { getUsu_categ_pref, getUsuario, getJogos, verificarLogin} from '../controllers/usuarioController.js';
 import { upload } from '../multer.js';
+import multer from 'multer';
+import path from 'path';
 const router = express.Router();
+const app = express();
+app.use('/uploads', express.static('uploads'));
+
 
 router.post('/login',loginUsuario);
 router.post('/cadastro', cadastroUsuario);
