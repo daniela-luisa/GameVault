@@ -1,4 +1,4 @@
-import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia, buscarCategoriasDoJogo, buscarNomeJogo, adminInserirJogo, adminBuscarJogoPorCodigo, adminAtualizarJogo,adminExcluirJogo} from '../models/adminModel.js';
+import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia, buscarCategoriasDoJogo, buscarNomeJogo, adminInserirJogo, adminBuscarJogoPorCodigo, adminAtualizarJogo,adminExcluirJogo, categoriaDeJogoEscolhida, deletarcategoriaDoJogo} from '../models/adminModel.js';
 
 import {buscarCategorias, categoriaEscolhida, buscarJogos} from '../models/usuarioModel.js';
 
@@ -504,7 +504,9 @@ export function getNovoJogo(req,res){
 
 /* POST novo jogo */
 export async function postNovoJogo(req, res){
-      const { nomeJogo, descricao, dt_lanca, capa } = req.body;
+      const { nomeJogo, descricao, dt_lanca } = req.body;
+      const capa = req.file ? req.file.filename : null;
+
   if (!nomeJogo || !descricao || !dt_lanca || !capa) {
     return res.json({
       admNome: global.admNome,
@@ -572,7 +574,10 @@ const id_jogo = req.params.id;
 /* POST alteração de jogo */
 export async function postAtualizarJogo(req, res) {
  const id_jogo = req.params.id;
- const { nomeJogo, descricao, dt_lanca, capa } = req.body;
+ const { nomeJogo, descricao, dt_lanca} = req.body;
+ 
+   const capa = req.file ? req.file.filename : null;
+
   if (!nomeJogo || !descricao || !dt_lanca || !capa) {
     return res.json({
       admNome: global.admNome,
@@ -625,3 +630,104 @@ export async function excluirJogo(req,res){
   }
 }
 
+//-------------------
+
+// CATEGORIAS DE JOGOS
+
+//------------------
+
+//Get de categorias de jogo
+export async function getCategoriasJogo(req, res) {
+  const id_jogo = req.params.id;
+  try {
+    const jogos = await buscarJogos();
+    const categorias = await buscarCategoriasDoJogo(id_jogo);
+
+    res.json({
+      admNome: global.admNome,
+      jogos,
+      categorias,
+      selectedJogo: parseInt(id_jogo),
+      mensagem: null,
+      sucesso: true,
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      jogos: [],
+      categorias: [],
+      mensagem: 'Erro ao carregar categorias.',
+      sucesso: false,
+    });
+  }
+}
+
+//get de nova categoria de jogo
+export async function getNovaCategoriaJogo(req, res) {
+ const id_jogo  = req.params.id;
+  try {
+    const categorias = await buscarCategorias();
+    const categoriasJaSelecionadas = await buscarCategoriasDoJogo(id_jogo);
+    res.json({
+      admNome: global.admNome,
+      id_jogo,
+      categorias,
+      categoriasJaSelecionadas,
+      mensagem: null,
+      sucesso: true
+    });
+  } catch (erro) {
+    console.error('Erro ao buscar categorias:', erro);
+    res.status(500).json({
+      mensagem: 'Erro ao carregar categorias.',
+      sucesso: false,
+    });
+  }
+}
+
+//post de nova Categoria de jogo
+export async function postNovaCategoriaJogo(req, res) {
+  const id_jogo = req.params.id;
+  const { categorias } = req.body;
+  try {
+    await categoriaDeJogoEscolhida(id_jogo, categorias); 
+    res.json({ 
+      admNome: global.admNome,
+      id_jogo,
+      mensagem: 'Categorias salvas com sucesso!',
+      sucesso: true
+    });
+  } catch (erro) {
+   console.error("Erro detalhado:", erro);
+res.status(500).json({
+  erro: 'Erro ao salvar Categorias.',
+  detalhes: erro.message || erro.sqlMessage || 'Erro desconhecido.'
+});
+  }
+}
+
+/* GET delete preferencias */
+export async function excluirCategoriaDoJogo(req, res) {
+  const { id_jogo, id_categoria } = req.params;
+
+  try {
+    await deletarcategoriaDoJogo(id_jogo, id_categoria);
+    res.json({
+      admNome: global.admNome,
+      jogos: await buscarJogos(),
+      categorias : await buscarCategoriasDoJogo(id_jogo),
+      mensagem: 'Categoria excluída com sucesso.',
+      sucesso: true
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      jogos: await buscarJogos(),
+      categorias: [],
+      mensagem: 'Erro ao excluir Categoria.',
+      sucesso: false,
+    });
+  }
+}

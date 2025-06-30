@@ -1,5 +1,6 @@
 import express from 'express';
-import { loginAdmin, getUsuarios, getCategorias, getnovaCategoria, postnovaCategoria, getatualizarCategoria, postAtualizarCategoria, excluirCategoria, getNovoUsuario, postNovoUsuario, excluirUsuario, getAtualizarUsuario, postAtualizarUsuario, getPreferencias, getNovaPreferencia, postNovaPreferencia, excluirPreferencia, getJogos, getNovoJogo, postNovoJogo, getAtualizarJogo, postAtualizarJogo, excluirJogo} from '../controllers/adminController.js';
+import { loginAdmin, getUsuarios, getCategorias, getnovaCategoria, postnovaCategoria, getatualizarCategoria, postAtualizarCategoria, excluirCategoria, getNovoUsuario, postNovoUsuario, excluirUsuario, getAtualizarUsuario, postAtualizarUsuario, getPreferencias, getNovaPreferencia, postNovaPreferencia, excluirPreferencia, getJogos, getNovoJogo, postNovoJogo, getAtualizarJogo, postAtualizarJogo, excluirJogo, getCategoriasJogo, getNovaCategoriaJogo, postNovaCategoriaJogo, excluirCategoriaDoJogo} from '../controllers/adminController.js';
+import { upload } from '../multer.js';
 
 const router = express.Router();
 
@@ -31,12 +32,15 @@ router.get('/excluir-preferencia/:id_usuario/:id_categoria', excluirPreferencia)
 router.get('/jogos', getJogos);
 //----
 router.get('/novo-jogo',getNovoJogo);
-router.post('/novo-jogo', postNovoJogo);
+router.post('/novo-jogo', upload.single('capa'), postNovoJogo);
 router.get('/atualizar-jogo/:id', getAtualizarJogo);
-router.post('/atualizar-jogo/:id', postAtualizarJogo);
+router.post('/atualizar-jogo/:id',upload.single('capa'), postAtualizarJogo);
 router.get('/excluir-jogo/:id', excluirJogo);
 //----
-
+router.get('/categorias-jogo/:id', getCategoriasJogo);
+router.get('/nova-categoria-jogo/:id', getNovaCategoriaJogo);
+router.post('/nova-categoria-jogo/:id', postNovaCategoriaJogo);
+router.get('/excluir-categoria-jogo/:id_jogo/:id_categoria', excluirCategoriaDoJogo);
 
 
 export default router;

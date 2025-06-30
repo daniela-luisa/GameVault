@@ -174,3 +174,14 @@ export async function adminExcluirJogo(id_jogo){
   const sql = "delete from jogo where id_jogo = ?;";
   await conexao.query(sql, [id_jogo]);
 }
+export async function categoriaDeJogoEscolhida(id_jogo, categorias) {
+  const conexao = await conectar(); 
+  const sql = 'insert into jogo_categ (id_catego, id_jogo) values ?';
+  const valores = categorias.map(categoriaId => [categoriaId, id_jogo]);
+  await conexao.query(sql, [valores]);
+}
+export async function deletarcategoriaDoJogo(id_jogo, id_categoria) {
+  const conexao = await conectar();
+  const sql = "delete from jogo_categ where id_jogo = ? and id_catego = ?";
+  await conexao.query(sql, [id_jogo, id_categoria]);
+}
