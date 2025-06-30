@@ -1,11 +1,5 @@
 import { conectar } from '../config/db.js';
 
-// export async function listarUsuarios() {
-//   const conexao = await conectar();
-//   const [usuariosEncontrado] = await conexao.query('SELECT * FROM usuario');
-//   return usuariosEncontrado;
-// }
-
 export async function autenticarUsuario(email, senha) {
     const conexao = await conectar();
     const [usuarioEncontrado] = await conexao.query('SELECT * FROM usuario WHERE email = ? AND senha = ?', [email, senha]);

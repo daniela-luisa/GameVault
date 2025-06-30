@@ -77,6 +77,10 @@ export async function adminExistePreferenciaCategoria(codigo) {
     return result[0].total > 0; 
 }
 
+//--------------------------------------------------
+//     para gerenciamento de usuarios
+//--------------------------------------------------
+
 export async function adminInserirUsuario(nome, nomeUsuario, dtNascimento, email, senha){
     const conexao = await conectar();
     const sql = 'insert into usuario(nome, nick, dt_nasc, email, senha) values (?,?,?,?,?)';
@@ -126,4 +130,47 @@ export async function deletarPreferencia(id_usuario, id_categoria) {
   const conexao = await conectar();
   const sql = "delete from usu_categ_pref where id_usuario = ? and id_catego = ?";
   await conexao.query(sql, [id_usuario, id_categoria]);
+}
+
+//--------------------------------------------------
+//     para gerenciamento de jogos
+//--------------------------------------------------
+
+export async function buscarCategoriasDoJogo(jogo){
+    const conexao = await conectar();
+    const sql = "  select j.nome as Jogo, c.nome as Categoria, c.id_catego, j.id_jogo from jogo j inner join jogo_categ jc on jc.id_jogo = j.id_jogo inner join categoria c on c.id_catego = jc.id_catego where j.id_jogo = ?;";
+    const [categoriasEcontrados] = await conexao.query(sql,[jogo]);
+    return categoriasEcontrados;
+}
+export async function buscarNomeJogo(nomeJogo){
+    const conexao = await conectar();
+    const sql = 'select * from jogo where nome = ?';
+      const [jogoEncontrado] = await conexao.query(sql, [nomeJogo]);
+    return jogoEncontrado.length > 0 ? jogoEncontrado[0] : null;
+}
+export async function adminInserirJogo(nomeJogo, descricao, dt_lanca,capa){
+    const conexao = await conectar();
+    const sql = 'insert into jogo(nome, descricao, dt_lanca, capa) values (?,?,?,?)';
+    await conexao.query(sql, [nomeJogo, descricao, dt_lanca,capa]);
+}
+export async function adminBuscarJogoPorCodigo(jogo){
+    const conexao = await conectar();
+    const sql = "select * from jogo where id_jogo = ?;";
+    const [jogoEcontrado] = await conexao.query(sql,[jogo]);
+    return jogoEcontrado && jogoEcontrado.length>0 ? jogoEcontrado[0] : {};
+}
+export async function adminAtualizarJogo(id_jogo, nomeJogo, descricao, dt_lanca, capa) {
+  const conexao = await conectar();
+  const sql = "update jogo set nome=?, descricao=?, dt_lanca=?, capa = ? where id_jogo = ?;";
+  await conexao.query(sql, [ nomeJogo, descricao, dt_lanca, capa, id_jogo]);
+}
+export async function adminExcluirJogo(id_jogo){
+  const conexao = await conectar();
+  const sqlCheck = "select count(*) as total from jogo_categ where id_jogo = ?;";
+  const [result] = await conexao.query(sqlCheck, [id_jogo]);
+  if (result[0].total > 0) {
+    throw new Error("Impossível apagar jogo com categorias associados. Apague as categorias primeiro.");
+  }
+  const sql = "delete from jogo where id_jogo = ?;";
+  await conexao.query(sql, [id_jogo]);
 }

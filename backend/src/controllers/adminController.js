@@ -1,6 +1,6 @@
-import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia} from '../models/adminModel.js';
+import { autenticarAdmin, listarUsuarios, adminBuscarCategoriasJogos, adminBuscarCategoria, adminInserirCategoria, adminBuscarCategoriaPorCodigo, adminAtualizarCategoria, adminVerificarQtdJogosCategoria, adminExcluirCategoria,adminExistePreferenciaCategoria, adminInserirUsuario, buscarNomeUsuario, adminExcluirUsuario, adminBuscarUsuarioPorCodigo, adminAtualizarUsuario, buscarPreferencias, deletarPreferencia, buscarCategoriasDoJogo, buscarNomeJogo, adminInserirJogo, adminBuscarJogoPorCodigo, adminAtualizarJogo,adminExcluirJogo} from '../models/adminModel.js';
 
-import {buscarCategorias, categoriaEscolhida} from '../models/usuarioModel.js';
+import {buscarCategorias, categoriaEscolhida, buscarJogos} from '../models/usuarioModel.js';
 
 export async function loginAdmin(req, res) {
   const { email, senha } = req.body;
@@ -462,5 +462,166 @@ export async function excluirPreferencia(req, res) {
   }
 }
 
+//------------------------------------------------------
 
+//   GERENCIAMENTO DE JOGOS
+
+//------------------------------------------------------
+
+// para a rota GET de jogos da pagina de jogos
+export async function getJogos(req, res){
+try {
+  const jogos = await buscarJogos();   
+  const categorias = await buscarCategoriasDoJogo(jogos[0]?.id_jogo || 0); // Padrão para as categorias do primeiro jogo
+    res.json({
+      admNome: global.admNome,
+      jogos,
+      categorias,
+      mensagem: null,
+      sucesso: false,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      jogos: [],
+      categorias: [],
+      mensagem: 'Erro ao carregar jogos.',
+      sucesso: false,
+    });
+  }
+}
+
+// GET da pagina de novo jogo
+export function getNovoJogo(req,res){
+  res.json({
+    admNome: global.admNome,
+    mensagem: null,
+    sucesso: false,
+  });
+}
+
+/* POST novo jogo */
+export async function postNovoJogo(req, res){
+      const { nomeJogo, descricao, dt_lanca, capa } = req.body;
+  if (!nomeJogo || !descricao || !dt_lanca || !capa) {
+    return res.json({
+      admNome: global.admNome,
+      mensagem: 'Todos os campos são obrigatórios.',
+      sucesso: false,
+    });
+  }
+
+  const nomeJogoExistente = await buscarNomeJogo(nomeJogo); 
+  if(nomeJogoExistente){
+    return res.json({
+      admNome: global.admNome,
+      mensagem: 'Nome de Jogo ja existe',
+      sucesso: false,
+    });
+  }
+  try {
+    await adminInserirJogo(nomeJogo, descricao, dt_lanca, capa);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Jogo cadastrado com sucesso!',
+      sucesso: true,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Erro ao Inserir Jogo.',
+      sucesso: false,
+    });
+  }
+}
+
+// GET editar jogo
+export async function getAtualizarJogo(req, res){
+const id_jogo = req.params.id;
+  try {
+    const jogo = await adminBuscarJogoPorCodigo(id_jogo);  
+    if (!jogo) {
+      return res.json({
+        admNome: global.admNome,
+        mensagem: 'Jogo não encontrado.',
+        sucesso: false,
+      });
+    }
+    res.json({
+      admNome: global.admNome,
+      jogo,
+      mensagem: null,
+      sucesso: false,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      mensagem: 'Erro ao carregar Jogo.',
+      sucesso: false,
+    });
+  }
+}
+
+
+/* POST alteração de jogo */
+export async function postAtualizarJogo(req, res) {
+ const id_jogo = req.params.id;
+ const { nomeJogo, descricao, dt_lanca, capa } = req.body;
+  if (!nomeJogo || !descricao || !dt_lanca || !capa) {
+    return res.json({
+      admNome: global.admNome,
+      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
+      mensagem: 'Todos os campos são obrigatórios.',
+      sucesso: false,
+    });
+  }
+  try {
+    await adminAtualizarJogo(id_jogo, nomeJogo, descricao, dt_lanca, capa);
+    res.json({
+      admNome: global.admNome,
+      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
+      mensagem: 'Jogo atualizado com sucesso!',
+      sucesso: true,
+    });
+  } 
+  catch (erro) {
+    console.error(erro);
+    res.json({
+      admNome: global.admNome,
+      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
+      mensagem: 'Erro ao atualizar Jogo.',
+      sucesso: false,
+    });
+  }
+}
+
+
+/* GET excluir jogo */
+export async function excluirJogo(req,res){
+ const id = req.params.id;
+  try {
+    await adminExcluirJogo(id);   
+    const jogos = await buscarJogos(); 
+    return res.json({
+    admNome : global.admNome,
+    jogos,
+    mensagem : "Jogo excluido com sucesso.",
+    sucesso : true
+  });
+  } 
+  catch (erro) {
+    res.json({
+      admNome: global.admNome,
+      jogos: await buscarJogos(),
+      mensagem: erro.message || 'Erro ao excluir Jogo.',
+      sucesso: false,
+    });
+  }
+}
 
