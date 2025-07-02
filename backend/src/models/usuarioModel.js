@@ -42,6 +42,12 @@ export async function buscarUsuario(id){
   return usuario[0];
 }
 
+// export async function buscarUsuarioPorId(id){
+//   const conexao = await conectar();
+//   const usuario = await conexao.query('select * from vw_perfil_usuario where ID = ?', [id])
+//   return usuario[0];
+// }
+
 export async function inserirFoto(id, foto){
   const conexao = await conectar();
   const sql = 'update usuario set foto = ? where id_usuario = ?;';
@@ -54,7 +60,18 @@ export async function buscarJogos(){
   return jogos;
 }
 
+// export async function avaliarJogo(jogabilidade, grafico, historia, id_usuario, id_jogo) {
+//   const conexao = await conectar();
+//   const sql = 'insert into avaliacao (jogabilidade, grafico, historia, id_usuario, id_jogo) VALUES (?,?,?,?,?);';
+//   await conexao.query(sql, [jogabilidade, grafico, historia, id_usuario, id_jogo]);
+// }
 
+// export async function buscarJogosPorCategoria(categoria) {
+//   const conexao = await conectar();
+//   const sql = 'call buscar_jogos_por_categoria(?);';
+//   const [resultado] = await conexao.query(sql,[categoria]);
+//   return resultado[0];
+// }
 
 
 

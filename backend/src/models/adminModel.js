@@ -185,3 +185,9 @@ export async function deletarcategoriaDoJogo(id_jogo, id_categoria) {
   const sql = "delete from jogo_categ where id_jogo = ? and id_catego = ?";
   await conexao.query(sql, [id_jogo, id_categoria]);
 }
+
+// export async function buscarAvaliacoes() {
+//   const conexao = await conectar();
+//   const resultado = await conexao.query('select * from vw_avaliacoes');
+//   return resultado[0];
+// }

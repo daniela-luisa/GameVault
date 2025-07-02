@@ -1,4 +1,4 @@
-import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref } from '../models/usuarioModel.js';
+import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref, avaliarJogo, buscarJogosPorCategoria } from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
@@ -116,3 +116,52 @@ res.json({foto});
   }
   next();
 }
+
+// /* POST cadastro de avaliação */
+// export async function postAvaliar(req, res) {
+//   const { jogabilidade, grafico, historia } = req.body;
+//   const { id_usuario, id_jogo } = req.params;
+
+//   if (!jogabilidade || !grafico || !historia) {
+//     return res.json({
+//       mensagem: 'Todos os campos são obrigatórios.',
+//       sucesso: false,
+//     });
+//   }
+//   try {
+//     await avaliarJogo({jogabilidade,grafico,historia,id_usuario,id_jogo});
+
+//     res.json({
+//       mensagem: 'Sua avaliação foi enviada com sucesso!',
+//       sucesso: true,
+//     });
+//   } catch (erro) {
+//     console.error(erro);
+//     res.json({
+//       mensagem: 'Erro ao enviar avaliação.',
+//       sucesso: false,
+//     });
+//   }
+// }
+
+// /* GET jogos por categoria */
+// export async function getJogosPorCategoria(req, res) {
+//   const { nome } = req.params;
+//   try {
+//     const jogos = await buscarJogosPorCategoria(nome);
+
+//     res.json({
+//       mensagem: `Jogos da categoria "${nome}"`,
+//       sucesso: true,
+//       jogos: jogos,
+//     });
+//   } catch (erro) {
+//     console.error(erro);
+//     res.json({
+//       mensagem: 'Erro ao buscar jogos por categoria.',
+//       sucesso: false,
+//       jogos: []
+//     });
+//   }
+// }
+

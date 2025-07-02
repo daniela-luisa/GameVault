@@ -731,3 +731,14 @@ export async function excluirCategoriaDoJogo(req, res) {
     });
   }
 }
+
+// export async function getAvaliacoes(req, res, next) {
+//   try {
+//     const avaliacoes = await buscarAvaliacoesCompletas();
+//     res.json(avaliacoes);
+//   } catch (error) {
+//     console.error('Erro ao buscar avaliações', error);
+//     res.status(500).json({ erro: 'Erro ao buscar avaliações' });
+//   }
+// }
+
