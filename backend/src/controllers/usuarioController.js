@@ -1,4 +1,4 @@
-import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref, avaliarJogo, buscarJogosPorCategoria } from '../models/usuarioModel.js';
+import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
