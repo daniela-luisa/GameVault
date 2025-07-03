@@ -23,7 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/home/:id" element={<Home />} />
         {/* <Route path="/usuarios" element={<Usuarios />} /> */}
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />

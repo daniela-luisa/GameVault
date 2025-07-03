@@ -2,19 +2,23 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 
 export default function Home() {
+  const { id } = useParams();
   const id_usuario = localStorage.getItem('id_usuario');
   console.log("ID do usuário logado:", id_usuario);
   const [jogos, setJogos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const navigate = useNavigate();
+  const [recomendacoes, setRecomendacoes] = useState([]);
+
   const imagens = [
-    "images/Melhores-Jogos-de-Videogames.jpg",
-    "images/2.jpg",
-    "images/os-10-melhores-jogos-de-2018-na-opiniao-do-uol-jogos-1546887965085_v2_1920x1080.jpg",
-    "images/maxresdefault.jpg"
+    "/images/Melhores-Jogos-de-Videogames.jpg",
+    "/images/2.jpg",
+    "/images/os-10-melhores-jogos-de-2018-na-opiniao-do-uol-jogos-1546887965085_v2_1920x1080.jpg",
+    "/images/maxresdefault.jpg"
   ];
 
   const [index, setIndex] = useState(0);
@@ -27,6 +31,22 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+useEffect(() => {
+  async function carregarRecomendacoes() {
+    try {
+      const resposta = await fetch(`http://localhost:3001/home/${id_usuario}`);
+      const dados = await resposta.json();
+      console.log('Recomendações:', dados.recomendacoes);
+      setRecomendacoes(dados.recomendacoes || []);
+    } catch (error) {
+      console.error('Erro ao carregar recomendações:', error);
+    }
+  }
+
+  if (id_usuario) {
+    carregarRecomendacoes();
+  }
+}, [id_usuario]);
 
 
   useEffect(() => {
@@ -117,7 +137,8 @@ export default function Home() {
             <ul>
               {categorias.map((categoria) => (
                 <li key={categoria.id_catego}>
-                  <p>{categoria.nome}</p></li>
+                  <p>{categoria.nome}</p> <br /></li>
+                  
               ))}
             </ul>
           </div>
@@ -129,6 +150,21 @@ export default function Home() {
                   <h3>{jogo.nome}</h3>
                   <p>{jogo.descricao}</p>
                   <p>{jogo.dt_lanca}</p>
+                  {/* capa */}
+                  <br />
+                </li>
+              ))}
+            </ul>
+          </div>
+           <div className="justify-start ">
+            <h2 className="text-2xl font-bold">Recomendações</h2>
+            <ul>
+              {recomendacoes.map((rec, index) => (
+                <li key={rec.index}>
+                  <h3>{rec.nome}</h3>
+                  <p>{rec.descricao}</p>
+                  <p>{rec.dt_lanca}</p>
+                  <br />
                   {/* capa */}
                 </li>
               ))}

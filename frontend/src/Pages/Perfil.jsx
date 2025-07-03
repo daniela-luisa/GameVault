@@ -4,14 +4,6 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-
-
-
-
-
-// ...suas outras rotas
-
-
 export default function Perfil() {
   const { id } = useParams(); // aqui ele vai pega o id da url (usando a rota)
   const [usuario, setUsuario] = useState(null); //aqui armazena os dados do usuario
@@ -86,7 +78,7 @@ export default function Perfil() {
       <nav className="bg-black flex justify-between items-center px-6 py-4 text-sm font-semibold text-white">
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
-          <a href="/home" className="hover:text-green-500">Inicio</a>
+          <a href={`/home/${id}`}  className="hover:text-green-500">Inicio</a>
           <a href="/favoritos" className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id}`} className="hover:text-green-500 text-green-500">Perfil</a>
         </div>

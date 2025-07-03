@@ -20,14 +20,13 @@ export default function Login() {
     // console.log(dados.cadastro2Completo);
 
     if (resposta.ok) {
-      alert('Login feito com sucesso!');
       console.log(dados);
 
       localStorage.setItem('id_usuario', dados.usuario.id);
       //--------------------------------------------------
       if (dados.usuario.cadastro2Completo) {
         console.log('Redirecionando para home...');
-        navigate('/home');
+        navigate(`/home/${dados.usuario.id}`);
       } else {
         console.log('Redirecionando para cadastro2...');
         navigate('/cadastro2');

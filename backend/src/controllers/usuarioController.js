@@ -1,5 +1,5 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
-import { autenticarUsuario, buscarUsuario, buscarJogos } from '../models/usuarioModel.js';
+import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes } from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
 //get categorias
@@ -24,6 +24,44 @@ export async function getUsu_categ_pref(req, res, next){
   }
 }
 
+export async function home(req, res, next){
+  const id_usuario = req.params.id;
+  const recomendacoes = await buscarRecomendacoes(id_usuario); 
+  res.json({id_usuario: id_usuario,
+    recomendacoes
+  });
+}
+
+// router.get('/browse', async function(req, res, next) {
+//   verificarLogin(res);
+
+//   const destaque = await global.banco.buscarDestaque();
+//   const emAlta = await global.banco.buscarEmAlta();
+//   const porCategoria = await global.banco.buscarPorCategoria();
+//   const categorias = await global.banco.buscarCategorias();
+//   //const recomendacoes = await global.banco.buscarRecomendacoes();
+
+//   res.render('browse', { 
+//     titulo: 'MFlix - Escolha de Vídeo', 
+//     imagem: global.perfil.perfoto,
+//     destaque,
+//     emAlta,
+//     porCategoria,
+//     categorias
+//   });
+// });
+
+/* GET logout de usuário */
+export async function logOut(req, res, next){
+  global.usuarioEmail = "";
+  global.usuarioCodigo = 0;
+
+  const email =  global.usuarioEmail;
+  const codigo = global.usuarioCodigo;
+  res.json({email: email, codigo: codigo});
+}
+
+
 // post login
 export async function loginUsuario(req, res) {
   const { email, senha } = req.body;
@@ -36,6 +74,7 @@ export async function loginUsuario(req, res) {
       
      global.usuarioCodigo = usuario.id_usuario;
      global.usuarioEmail = usuario.email;
+     global.usuarioNome = usuario.nomeUsuario
     } else {
       res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
