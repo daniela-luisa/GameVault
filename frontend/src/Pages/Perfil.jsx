@@ -79,7 +79,7 @@ export default function Perfil() {
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
           <a href={`/home/${id}`}  className="hover:text-green-500">Inicio</a>
-          <a href="/favoritos" className="hover:text-green-500">Favoritos</a>
+          <a href={`/favoritos/${id}`} className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id}`} className="hover:text-green-500 text-green-500">Perfil</a>
         </div>
       </nav>

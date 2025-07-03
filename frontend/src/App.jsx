@@ -17,6 +17,7 @@ import AtualizarCategoria from './Pages/admin/Atualizar_categoria';
 import AtualizarUsuario from './Pages/admin/Atualizar_usuario';
 import NovoUsuario from './Pages/admin/Novo_usuario';
 import NovaPreferencia from './Pages/admin/nova_preferencia';
+import Favoritos from './Pages/Favoritos';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro2" element={<Cadastro2 />} />
         <Route path='/perfil/:id' element={<Perfil />}/>
+        <Route path='/favoritos/:id' element={<Favoritos />}/>
 
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />

@@ -1,5 +1,5 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
-import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes } from '../models/usuarioModel.js';
+import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos } from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
 //get categorias
@@ -25,12 +25,18 @@ export async function getUsu_categ_pref(req, res, next){
 }
 
 export async function home(req, res, next){
+   try {
   const id_usuario = req.params.id;
   const recomendacoes = await buscarRecomendacoes(id_usuario); 
   res.json({id_usuario: id_usuario,
     recomendacoes
   });
+    }catch (error){
+    res.status(500).json({ erro: 'Erro ao buscar jogos recomendados do usuario' });
+
+  }
 }
+
 
 // router.get('/browse', async function(req, res, next) {
 //   verificarLogin(res);
@@ -149,12 +155,28 @@ res.json({foto});
     }
   }
 
+export async function getFavoritos(req, res, next){
+  const id = req.params.id;
+
+  const favoritos = await buscarFavoritos(id);
+
+  res.json({ favoritos });
+
+
+
+}
+
+
+
+
   export function verificarLogin(req, res, next) {
   if (!global.usuarioEmail || global.usuarioEmail === "") {
     return res.status(401).json({ mensagem: 'Usuário não autenticado' });
   }
   next();
 }
+
+
 
 // /* POST cadastro de avaliação */
 // export async function postAvaliar(req, res) {

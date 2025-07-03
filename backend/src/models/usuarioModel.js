@@ -67,9 +67,17 @@ export async function buscarRecomendacoes(id_usuario){
   usu_categ_pref p on p.id_catego = c.id_catego
   inner join usuario u on u.id_usuario = p.id_usuario where p.id_usuario=?;` ;
   const [recomendacoes] = await conexao.query(sql, [id_usuario]);
-  return recomendacoes
+  return recomendacoes;
 }
 
+export async function buscarFavoritos(idUsuario){
+  const conexao = await conectar();
+  const sql = `select j.nome, j.dt_lanca from jogo j inner join
+  favorito f on f.id_jogo = j.id_jogo inner join
+   usuario u on u.id_usuario = f.id_usuario where f.id_usuario = ?;`;
+  const [favoritos] = await conexao.query(sql, [idUsuario]);
+  return favoritos;
+}
 
 
 // export async function avaliarJogo(jogabilidade, grafico, historia, id_usuario, id_jogo) {

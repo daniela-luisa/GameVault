@@ -7,8 +7,10 @@ import { useParams } from 'react-router-dom';
 
 export default function Home() {
   const { id } = useParams();
+
   const id_usuario = localStorage.getItem('id_usuario');
   console.log("ID do usuário logado:", id_usuario);
+  
   const [jogos, setJogos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function Home() {
 useEffect(() => {
   async function carregarRecomendacoes() {
     try {
-      const resposta = await fetch(`http://localhost:3001/home/${id_usuario}`);
+      const resposta = await fetch(`http://localhost:3001/home/${id}`);
       const dados = await resposta.json();
       console.log('Recomendações:', dados.recomendacoes);
       setRecomendacoes(dados.recomendacoes || []);
@@ -97,7 +99,7 @@ useEffect(() => {
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
           <a href="/home" className="hover:text-green-500 text-green-500">Inicio</a>
-          <a href="/favoritos" className="hover:text-green-500">Favoritos</a>
+          <a href={`/favoritos/${id}`}  className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>
       </nav>
@@ -149,7 +151,7 @@ useEffect(() => {
                 <li key={jogo.id_jogo}>
                   <h3>{jogo.nome}</h3>
                   <p>{jogo.descricao}</p>
-                  <p>{jogo.dt_lanca}</p>
+                  <p>{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
                   {/* capa */}
                   <br />
                 </li>
@@ -163,7 +165,7 @@ useEffect(() => {
                 <li key={rec.index}>
                   <h3>{rec.nome}</h3>
                   <p>{rec.descricao}</p>
-                  <p>{rec.dt_lanca}</p>
+                  <p>{new Date(rec.dt_lanca).toLocaleDateString('pt-BR')}</p>
                   <br />
                   {/* capa */}
                 </li>
