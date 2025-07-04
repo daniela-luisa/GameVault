@@ -1,5 +1,4 @@
 import { conectar } from '../config/db.js';
-
 export async function autenticarUsuario(email, senha) {
     const conexao = await conectar();
     const [usuarioEncontrado] = await conexao.query('SELECT * FROM usuario WHERE email = ? AND senha = ?', [email, senha]);
@@ -68,6 +67,13 @@ export async function buscarRecomendacoes(id_usuario){
   inner join usuario u on u.id_usuario = p.id_usuario where p.id_usuario=?;` ;
   const [recomendacoes] = await conexao.query(sql, [id_usuario]);
   return recomendacoes;
+}
+
+export async function buscarJogoCateg(){
+  const conexao= await conectar();
+  const sql = 'select * from jogo_categ';
+  const [relacoes] = await conexao.query(sql);
+  return relacoes;
 }
 
 export async function buscarFavoritos(idUsuario){

@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 
 export default function Home() {
   const { id } = useParams();
+  const [relacoes, setRelacoes] = useState([]);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
 
   const id_usuario = localStorage.getItem('id_usuario');
   console.log("ID do usuário logado:", id_usuario);
@@ -15,6 +17,12 @@ export default function Home() {
   const [categorias, setCategorias] = useState([]);
   const navigate = useNavigate();
   const [recomendacoes, setRecomendacoes] = useState([]);
+
+const jogosFiltrados = categoriaSelecionada
+  ? jogos.filter(jogo => 
+      relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)
+    )
+  : jogos;
 
   const imagens = [
     "/images/Melhores-Jogos-de-Videogames.jpg",
@@ -40,6 +48,7 @@ useEffect(() => {
       const dados = await resposta.json();
       console.log('Recomendações:', dados.recomendacoes);
       setRecomendacoes(dados.recomendacoes || []);
+        setRelacoes(dados.relacoes || []); 
     } catch (error) {
       console.error('Erro ao carregar recomendações:', error);
     }
@@ -136,27 +145,39 @@ useEffect(() => {
         <div className="flex mb-6 gap-20">
           <div>
             <h1 className="text-2xl font-bold">Categoria</h1>
-            <ul>
-              {categorias.map((categoria) => (
-                <li key={categoria.id_catego}>
-                  <p>{categoria.nome}</p> <br /></li>
-                  
-              ))}
-            </ul>
+           <ul>
+  {categorias.map((categoria) => (
+    <li key={categoria.id_catego}>
+     <button
+        onClick={() => setCategoriaSelecionada(categoria.id_catego)}
+        className={`${categoriaSelecionada === categoria.id_catego ? 'text-green-500' : 'text-white'} `}>
+        {categoria.nome}
+      </button>
+    </li>
+  ))}
+  <li>
+     <button 
+      onClick={() => setCategoriaSelecionada(null)} 
+      className={`${categoriaSelecionada === null ? 'text-green-500' : 'text-white'}`}>Todas
+    </button>
+  </li>
+</ul>
           </div>
           <div className="justify-start ">
             <h2 className="text-2xl font-bold">Jogos</h2>
-            <ul>
-              {jogos.map((jogo) => (
-                <li key={jogo.id_jogo}>
-                  <h3>{jogo.nome}</h3>
-                  <p>{jogo.descricao}</p>
-                  <p>{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
-                  {/* capa */}
-                  <br />
-                </li>
-              ))}
-            </ul>
+           <ul>
+  {(categoriaSelecionada ? 
+    jogos.filter(jogo => relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)) 
+    : jogos
+  ).map((jogo) => (
+    <li key={jogo.id_jogo}>
+      <h3>{jogo.nome}</h3>
+      <p>{jogo.descricao}</p>
+      <p>{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
+      <br />
+    </li>
+  ))}
+</ul>
           </div>
            <div className="justify-start ">
             <h2 className="text-2xl font-bold">Recomendações</h2>

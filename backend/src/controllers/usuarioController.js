@@ -1,5 +1,5 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
-import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos } from '../models/usuarioModel.js';
+import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg} from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
 //get categorias
@@ -28,12 +28,13 @@ export async function home(req, res, next){
    try {
   const id_usuario = req.params.id;
   const recomendacoes = await buscarRecomendacoes(id_usuario); 
+  const relacoes = await buscarJogoCateg();
   res.json({id_usuario: id_usuario,
+    relacoes,
     recomendacoes
   });
     }catch (error){
     res.status(500).json({ erro: 'Erro ao buscar jogos recomendados do usuario' });
-
   }
 }
 
