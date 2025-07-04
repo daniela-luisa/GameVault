@@ -9,7 +9,8 @@ export default function Home() {
   const { id } = useParams();
   const [relacoes, setRelacoes] = useState([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
-
+  const [favoritos, setFavoritos] = useState([]);
+console.log("Favoritos carregados:", favoritos);
   const id_usuario = localStorage.getItem('id_usuario');
   console.log("ID do usuário logado:", id_usuario);
   
@@ -17,12 +18,6 @@ export default function Home() {
   const [categorias, setCategorias] = useState([]);
   const navigate = useNavigate();
   const [recomendacoes, setRecomendacoes] = useState([]);
-
-const jogosFiltrados = categoriaSelecionada
-  ? jogos.filter(jogo => 
-      relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)
-    )
-  : jogos;
 
   const imagens = [
     "/images/Melhores-Jogos-de-Videogames.jpg",
@@ -40,6 +35,46 @@ const jogosFiltrados = categoriaSelecionada
 
     return () => clearInterval(interval);
   }, []);
+
+useEffect(() => {
+  console.log("Entrou no useEffect dos favoritos");
+  async function carregarFavoritos() {
+    try {
+      const resposta = await fetch(`http://localhost:3001/favoritos/${id_usuario}`);
+      const dados = await resposta.json();
+      console.log('Favoritos recebidos:', dados); 
+      const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
+      setFavoritos(idsFavoritados);
+    } catch (error) { 
+      console.error('Erro ao carregar favoritos:', error);
+    }
+  }
+
+  if (id_usuario) {
+    carregarFavoritos();
+  }
+}, [id_usuario]);
+
+const favoritarJogo = async (id_jogo) => {
+  try {
+    const resposta = await fetch('http://localhost:3001/favoritar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_usuario, id_jogo }),
+    });
+
+    const dados = await resposta.json();
+    if (dados.sucesso) {
+      alert('Jogo favoritado com sucesso!');
+      setFavoritos(prev => [...prev, id_jogo]);    } else {
+      alert(dados.mensagem || 'Erro ao favoritar');
+    }
+  } catch (error) {
+    console.error('Erro ao favoritar:', error);
+    alert('Erro ao favoritar');
+  }
+};
+
 
 useEffect(() => {
   async function carregarRecomendacoes() {
@@ -108,7 +143,7 @@ useEffect(() => {
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
           <a href="/home" className="hover:text-green-500 text-green-500">Inicio</a>
-          <a href={`/favoritos/${id}`}  className="hover:text-green-500">Favoritos</a>
+          <a href={`/favoritos/${id_usuario}`}  className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>
       </nav>
@@ -144,13 +179,13 @@ useEffect(() => {
       <div className="max-w-7xl mx-auto p-6">
         <div className="flex mb-6 gap-20">
           <div>
-            <h1 className="text-2xl font-bold">Categoria</h1>
+            <h1 className="text-2xl font-bold">Filtro</h1>
            <ul>
   {categorias.map((categoria) => (
     <li key={categoria.id_catego}>
      <button
         onClick={() => setCategoriaSelecionada(categoria.id_catego)}
-        className={`${categoriaSelecionada === categoria.id_catego ? 'text-green-500' : 'text-white'} `}>
+        className={`hover:text-green-500 ${categoriaSelecionada === categoria.id_catego ? 'text-green-500' : 'text-white'} `}>
         {categoria.nome}
       </button>
     </li>
@@ -174,6 +209,15 @@ useEffect(() => {
       <h3>{jogo.nome}</h3>
       <p>{jogo.descricao}</p>
       <p>{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
+
+   <button 
+  onClick={() => favoritarJogo(jogo.id_jogo)}
+  disabled={favoritos.includes(jogo.id_jogo)}
+  className={`mt-2 ${favoritos.includes(jogo.id_jogo) ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}>
+  {favoritos.includes(jogo.id_jogo) ? 'Curtido' : 'Curtir'}
+</button>
+
+
       <br />
     </li>
   ))}

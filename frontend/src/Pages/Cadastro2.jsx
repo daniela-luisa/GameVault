@@ -38,10 +38,11 @@ export default function Cadastro2() {
         categorias: selecionadas
       })
     })
-      .then(resposta => {
+      .then(async resposta => {
         if (resposta.ok) {
+          const dados = await resposta.json(); 
           alert("Categorias salvas com sucesso!");
-          navigate('/home');
+          navigate(`/home/${id_usuario}`);
         } else {
           alert("Erro ao salvar categorias");
         }

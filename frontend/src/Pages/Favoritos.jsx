@@ -26,6 +26,23 @@ export default function Favoritos() {
     }
   }, [id]);
 
+   const desfavoritarJogo = async (id_jogo) => {
+    try {
+      const resposta = await fetch(`http://localhost:3001/excluir-favorito/${id}/${id_jogo}`);
+      const dados = await resposta.json();
+
+      if (dados.sucesso) {
+        alert('Jogo removido dos favoritos!');
+        setFavoritos(prev => prev.filter(fav => fav.id_jogo !== id_jogo));  
+      } else {
+        alert('Erro ao desfavoritar.');
+      }
+    } catch (error) {
+      console.error('Erro ao desfavoritar:', error);
+      alert('Erro ao desfavoritar.');
+    }
+  };
+
 
  return(
  <div className="min-h-screen bg-gradient-to-b from-[#000A05] via-[#002211] to-[#003F1F] text-white">
@@ -39,7 +56,7 @@ export default function Favoritos() {
       </nav>
       <div className="max-w-7xl mx-auto p-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-5xl font-bold">Bem-vindo ao Favoritos</h1>
+          <h1 className="text-5xl font-bold">Favoritos</h1>
         </div>
       </div>
 
@@ -48,14 +65,18 @@ export default function Favoritos() {
           <div>
             <h1 className="text-2xl font-bold">Favoritos</h1>
             <ul>
-              {favoritos.map((favoritos) => (
-                <li key={favoritos.id_usuario}>
-                  <p>{favoritos.nome}</p> 
-                 <p>{new Date(favoritos.dt_lanca).toLocaleDateString('pt-BR')}</p>
-                 <br /></li>
-                  
-              ))}
-            </ul>
+  {favoritos.map((fav) => ( 
+    <li key={fav.id_jogo}>   
+      <p>{fav.nome}</p> 
+      <p>{new Date(fav.dt_lanca).toLocaleDateString('pt-BR')}</p>
+
+      <button 
+        onClick={() => desfavoritarJogo(fav.id_jogo)}className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded mt-2">
+        Desfavoritar</button>
+      <br />
+    </li>
+  ))}
+</ul>
           </div>
      </div>
 </div>

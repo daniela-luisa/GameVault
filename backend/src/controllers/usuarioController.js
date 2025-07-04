@@ -1,5 +1,5 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
-import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg} from '../models/usuarioModel.js';
+import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg, favoritar, deletarFavorito} from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 
 //get categorias
@@ -36,6 +36,19 @@ export async function home(req, res, next){
     }catch (error){
     res.status(500).json({ erro: 'Erro ao buscar jogos recomendados do usuario' });
   }
+}
+
+export async function postFavoritar(req, res, next){
+    const { id_usuario, id_jogo } = req.body;
+try {
+  await favoritar(id_usuario, id_jogo);
+
+    res.json({ sucesso: true, mensagem: 'Favorito salvo com sucesso!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ sucesso: false, mensagem: 'Erro ao favoritar.' });
+  }
+
 }
 
 
@@ -161,12 +174,29 @@ export async function getFavoritos(req, res, next){
 
   const favoritos = await buscarFavoritos(id);
 
-  res.json({ favoritos });
-
-
-
+  res.json({ favoritos, mensagem: null, sucesso: false});
 }
 
+export async function getDeletarFavorito(req, res, next){
+  const {id_usuario, id_jogo} = req.params;
+
+  try {
+    await deletarFavorito(id_usuario, id_jogo);
+    res.json({
+      favoritos: await buscarFavoritos(id_usuario),
+      mensagem: 'Jogo retirado dos favoritos',
+      sucesso: true     
+    })
+
+  }catch{
+    console.error(erro);
+     res.json({
+     favoritos: await buscarFavoritos(id_usuario),
+     mensagem: 'Erro ao retirar jogo dos favoritos',
+     sucesso: false     
+    })
+  }
+}
 
 
 

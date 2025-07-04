@@ -76,13 +76,25 @@ export async function buscarJogoCateg(){
   return relacoes;
 }
 
+export async function favoritar(idUsuario, idJogo){
+  const conexao = await conectar();
+  const sql = 'insert into favorito values (?, ?);';
+  await conexao.query(sql, [idUsuario, idJogo]);
+}
+
 export async function buscarFavoritos(idUsuario){
   const conexao = await conectar();
-  const sql = `select j.nome, j.dt_lanca from jogo j inner join
+  const sql = `select j.id_jogo, j.nome, j.dt_lanca from jogo j inner join
   favorito f on f.id_jogo = j.id_jogo inner join
    usuario u on u.id_usuario = f.id_usuario where f.id_usuario = ?;`;
   const [favoritos] = await conexao.query(sql, [idUsuario]);
   return favoritos;
+}
+
+export async function deletarFavorito(idUsuario, idJogo){
+  const conexao = await conectar();
+  const sql = 'delete from favorito where id_usuario=? and id_jogo=?;';
+  await conexao.query(sql, [idUsuario, idJogo]);
 }
 
 
