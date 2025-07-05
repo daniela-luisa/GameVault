@@ -84,7 +84,7 @@ const carregarJogos = async () => {
             <div className="max-w-7xl mx-auto p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Gerenciamento de Jogos</h1>
-       <Link to="/admin/novo-usuario">Adicionar Jogo</Link>
+       <Link to="/admin/novo-jogo">Adicionar Jogo</Link>
         </div>
 
         {mensagem && (
@@ -123,7 +123,7 @@ const carregarJogos = async () => {
 {jogoSelecionado && (
   <div style={{ display: 'flex', justifyContent: 'space-between'}}>
     <h2>Categorias do Jogo Selecionado</h2>
-    <Link to={`/admin/nova-preferencia/${jogoSelecionado}`}>Adicionar Categorias</Link>
+    <Link to={`/admin/nova-categoria-jogo/${jogoSelecionado}`}>Adicionar Categorias</Link>
   </div>
 )}
 

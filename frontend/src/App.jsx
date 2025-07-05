@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import Home from './Pages/Home';
-// import Usuarios from './Pages/Usuario';
 import Login from './Pages/Login';
 import Cadastro from './Pages/Cadastro';
 import Cadastro2 from './Pages/Cadastro2';
@@ -18,6 +17,9 @@ import AtualizarUsuario from './Pages/admin/Atualizar_usuario';
 import NovoUsuario from './Pages/admin/Novo_usuario';
 import NovaPreferencia from './Pages/admin/nova_preferencia';
 import Favoritos from './Pages/Favoritos';
+import NovoJogo from './Pages/Novo_jogo';
+import NovaCategJogo from './Pages/Novo_categJogo';
+import AtualizarJogo from './Pages/Atualizar_jogo';
 
 
 function App() {
@@ -25,7 +27,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/home/:id" element={<Home />} />
-        {/* <Route path="/usuarios" element={<Usuarios />} /> */}
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro2" element={<Cadastro2 />} />
@@ -41,6 +42,10 @@ function App() {
         <Route path="/admin/nova-preferencia/:id" element={<NovaPreferencia />} />
 
         <Route path="/admin/jogos" element={<Jogos />} />
+        <Route path="/admin/novo-jogo" element={<NovoJogo />} />
+        <Route path= "/admin/atualizar-jogo/:id" element={< AtualizarJogo/>} />
+        <Route path="/admin/nova-categoria-jogo/:id" element={<NovaCategJogo />} /> 
+
         <Route path="/admin/categorias" element={<Categorias />} />
         <Route path="/admin/nova-categoria" element={<NovaCategoria />} />
         <Route path="/admin/atualizar-categoria/:id" element={<AtualizarCategoria/>} />
