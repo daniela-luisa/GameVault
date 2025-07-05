@@ -32,7 +32,6 @@ export default function Favoritos() {
       const dados = await resposta.json();
 
       if (dados.sucesso) {
-        alert('Jogo removido dos favoritos!');
         setFavoritos(prev => prev.filter(fav => fav.id_jogo !== id_jogo));  
       } else {
         alert('Erro ao desfavoritar.');
@@ -60,19 +59,20 @@ export default function Favoritos() {
         </div>
       </div>
 
+
 <div className="max-w-7xl mx-auto p-6">
-        <div className="flex mb-6 gap-20">
+         <div className="justify-start ">
           <div>
             <h1 className="text-2xl font-bold">Favoritos</h1>
-            <ul>
+           <ul className="flex flex-wrap gap-6">
   {favoritos.map((fav) => ( 
-    <li key={fav.id_jogo}>   
-      <p>{fav.nome}</p> 
-      <p>{new Date(fav.dt_lanca).toLocaleDateString('pt-BR')}</p>
+    <li key={fav.id_jogo} className="w-60">   
+      <p className="font-bold">{fav.nome}</p> 
+      <img src={`http://localhost:3001/uploads/${fav.capa}`} alt={`Capa de ${fav.nome}`} className=" object-contain h-70" />
+      <p className="text-gray-400">{new Date(fav.dt_lanca).toLocaleDateString('pt-BR')}</p>
 
-      <button 
-        onClick={() => desfavoritarJogo(fav.id_jogo)}className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded mt-2">
-        Desfavoritar</button>
+      <button onClick={() => desfavoritarJogo(fav.id_jogo)}className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded mt-2">Desfavoritar
+      </button>
       <br />
     </li>
   ))}

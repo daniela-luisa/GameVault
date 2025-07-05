@@ -58,7 +58,6 @@ export default function Perfil() {
     const dados = await resposta.json();
 
     if (resposta.ok) {
-      alert('Imagem enviada com sucesso!');
       console.log('Foto salva:', dados.foto);
       setUsuario({ ...usuario, foto: dados.foto });
     } else {

@@ -37,7 +37,6 @@ console.log("Favoritos carregados:", favoritos);
   }, []);
 
 useEffect(() => {
-  console.log("Entrou no useEffect dos favoritos");
   async function carregarFavoritos() {
     try {
       const resposta = await fetch(`http://localhost:3001/favoritos/${id_usuario}`);
@@ -65,13 +64,28 @@ const favoritarJogo = async (id_jogo) => {
 
     const dados = await resposta.json();
     if (dados.sucesso) {
-      alert('Jogo favoritado com sucesso!');
       setFavoritos(prev => [...prev, id_jogo]);    } else {
       alert(dados.mensagem || 'Erro ao favoritar');
     }
   } catch (error) {
     console.error('Erro ao favoritar:', error);
     alert('Erro ao favoritar');
+  }
+};
+
+const desfavoritarJogo = async (id_jogo) => {
+  try {
+    const resposta = await fetch(`http://localhost:3001/excluir-favorito/${id_usuario}/${id_jogo}`);
+    const dados = await resposta.json();
+
+    if (dados.sucesso) {
+      setFavoritos(prev => prev.filter(fav => fav !== id_jogo));  // Remove da lista
+    } else {
+      alert('Erro ao desfavoritar.');
+    }
+  } catch (error) {
+    console.error('Erro ao desfavoritar:', error);
+    alert('Erro ao desfavoritar.');
   }
 };
 
@@ -176,72 +190,76 @@ useEffect(() => {
 
 
 
+
       <div className="max-w-7xl mx-auto p-6">
-        <div className="flex mb-6 gap-20">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col gap-10">
+
+
+      <div className="justify-start ">
+  <h2 className="text-2xl font-bold">Recomendações</h2>
+   <div className="flex flex-wrap gap-6">
+    {recomendacoes.map((rec, index) => (
+      <div key={index} className="w-60">
+        <h3 className="font-bold">{rec.nome}</h3>
+        <img src={`http://localhost:3001/uploads/${rec.capa}`} alt={`Capa de ${rec.nome}`} className="object-contain h-60" />
+        <p className="text-gray-400">{new Date(rec.dt_lanca).toLocaleDateString('pt-BR')}</p>
+
+        <button
+          onClick={() => favoritos.includes(rec.id_jogo) ? desfavoritarJogo(rec.id_jogo) : favoritarJogo(rec.id_jogo)}
+          className={`mt-2 ${favoritos.includes(rec.id_jogo) ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}
+        >
+          {favoritos.includes(rec.id_jogo) ? 'Descurtir' : 'Curtir'}
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
+
+ <div className="flex gap-10">
           <div>
             <h1 className="text-2xl font-bold">Filtro</h1>
            <ul>
   {categorias.map((categoria) => (
     <li key={categoria.id_catego}>
-     <button
-        onClick={() => setCategoriaSelecionada(categoria.id_catego)}
+     <button onClick={() => setCategoriaSelecionada(categoria.id_catego)}
         className={`hover:text-green-500 ${categoriaSelecionada === categoria.id_catego ? 'text-green-500' : 'text-white'} `}>
         {categoria.nome}
       </button>
     </li>
   ))}
   <li>
-     <button 
-      onClick={() => setCategoriaSelecionada(null)} 
-      className={`${categoriaSelecionada === null ? 'text-green-500' : 'text-white'}`}>Todas
+     <button onClick={() => setCategoriaSelecionada(null)} 
+     className={`${categoriaSelecionada === null ? 'text-green-500' : 'text-white'}`}>Todas
     </button>
   </li>
 </ul>
-          </div>
+</div>
+
+
           <div className="justify-start ">
             <h2 className="text-2xl font-bold">Jogos</h2>
-           <ul>
-  {(categoriaSelecionada ? 
-    jogos.filter(jogo => relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)) 
-    : jogos
-  ).map((jogo) => (
-    <li key={jogo.id_jogo}>
-      <h3>{jogo.nome}</h3>
-      <p>{jogo.descricao}</p>
-      <p>{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
+          <div className="flex flex-wrap gap-6">
+    {(categoriaSelecionada
+     ? jogos.filter(jogo => relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)) : jogos
+    ).map((jogo) => (
+      <div key={jogo.id_jogo} className="w-60">
+        <h3 className="font-bold">{jogo.nome}</h3>
+        <img src={`http://localhost:3001/uploads/${jogo.capa}`} alt={`Capa de ${jogo.nome}`} className="object-contain h-70" />
+        <p className="text-sm">{jogo.descricao}</p>
+        <p className="text-gray-400">{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
 
-   <button 
-  onClick={() => favoritarJogo(jogo.id_jogo)}
-  disabled={favoritos.includes(jogo.id_jogo)}
-  className={`mt-2 ${favoritos.includes(jogo.id_jogo) ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}>
-  {favoritos.includes(jogo.id_jogo) ? 'Curtido' : 'Curtir'}
-</button>
-
-
-      <br />
-    </li>
-  ))}
-</ul>
-          </div>
-           <div className="justify-start ">
-            <h2 className="text-2xl font-bold">Recomendações</h2>
-            <ul>
-              {recomendacoes.map((rec, index) => (
-                <li key={rec.index}>
-                  <h3>{rec.nome}</h3>
-                  <p>{rec.descricao}</p>
-                  <p>{new Date(rec.dt_lanca).toLocaleDateString('pt-BR')}</p>
-                  <br />
-                  {/* capa */}
-                </li>
-              ))}
-            </ul>
+        <button onClick={() => favoritos.includes(jogo.id_jogo) ? desfavoritarJogo(jogo.id_jogo) : favoritarJogo(jogo.id_jogo)}
+          className={`mt-2 ${favoritos.includes(jogo.id_jogo) ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}> {favoritos.includes(jogo.id_jogo) ? 'Descurtir' : 'Curtir'}
+        </button>
+      </div>
+    ))}
+  </div>
           </div>
         </div>
+
       </div>
-
-
     </div>
+ </div>
   );
 }
 
