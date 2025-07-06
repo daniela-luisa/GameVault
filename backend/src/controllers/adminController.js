@@ -291,6 +291,7 @@ const id_usuario = req.params.id;
       mensagem: null,
       sucesso: false,
     });
+    console.log(res.json.usuario)
   } 
   catch (erro) {
     console.error(erro);
