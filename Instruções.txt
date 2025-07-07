@@ -1,0 +1,7 @@
+Instruções necessárias:
+Abrir o terminal, navegar pra pasta de backend escrevendo cd backend e depois iniciar com npm run dev. Abrir outro terminal, ir pra pasta do frontend escrevendo cd frontend e iniciar com npm run dev, clicar no http//localhost:5173.
+Para a rota de usuário: localhost:5173/
+Para a rota de admin: localhost:5173/admin/login
+
+Login do admin: email- admin@gmail.com
+		senha- 123
