@@ -98,16 +98,6 @@ export default function Cadastro() {
         />
       </div>
 
-      <div className="flex flex-col">
-        <label className="text-white mb-1">Confirmar Senha</label>
-        <input 
-          type="password" 
-          placeholder="confirmar senha"
-          // Aqui você pode adicionar um estado separado para confirmação de senha
-          className="bg-gray-800 text-white placeholder-gray-400 p-1.5 rounded-md"
-        />
-      </div>
-
       {/* Botão de Continuar */}
     
 
