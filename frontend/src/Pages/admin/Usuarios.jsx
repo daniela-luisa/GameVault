@@ -106,10 +106,11 @@ export default function Usuarios() {
             </thead>
             <tbody>
               {usuarios.map(usuario => (
-                <tr key={usuario.id_usuario} className="border-b border-gray-600 hover:bg-gray-700">
-                  <td style={{ cursor: 'pointer' }} onClick={() => carregarPreferencias(usuario.id_usuario)} className="py-3 px-6" >{usuario.email}
+                <tr style={{ cursor: 'pointer' }} onClick={() => carregarPreferencias(usuario.id_usuario)} key={usuario.id_usuario}
+                className="border-b border-gray-600 hover:bg-gray-700">
+                  <td className="py-3 px-6" >{usuario.email}
                   </td>
-                  <td className="py-3 px-6" style={{ cursor: 'pointer' }} onClick={() => carregarPreferencias(usuario.id_usuario)}>{usuario.nick}
+                  <td className="py-3 px-6" >{usuario.nick}
                   </td>
 
                   <td className="py-3 px-6 text-center space-x-2">

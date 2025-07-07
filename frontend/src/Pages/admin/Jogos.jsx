@@ -58,7 +58,7 @@ export default function Jogos() {
 
   const excluirCategoria = async (id_jogo, id_categoria) => {
     try {
-      const resposta = await fetch(`http://localhost:3001/admin/excluir-preferencia/${id_jogo}/${id_categoria}`);
+      const resposta = await fetch(`http://localhost:3001/admin/excluir-categoria-jogo/${id_jogo}/${id_categoria}`);
       const dados = await resposta.json();
       setMensagem(dados.mensagem);
       setSucesso(dados.sucesso);
@@ -98,20 +98,26 @@ export default function Jogos() {
           <table className="min-w-full bg-gray-800 text-white rounded-lg overflow-hidden">
             <thead className="bg-gray-700 text-sm text-white">
               <tr>
-                <th className="py-3 px-6 text-left">Nome</th>
-                <th className="py-3 px-6 text-left">Descrição</th>
-                <th className="py-3 px-6 text-center">Ações</th>
+                <th className="py-3 px-4 text-left">Capa</th>
+                <th className="py-3 px-1 text-left">Nome</th>
+                <th className="py-3 text-left">Descrição</th>
+                <th className="py-3 px-6 text-right">Ações</th>
               </tr>
             </thead>
             <tbody>
               {jogo.map(jogo => (
-                <tr key={jogo.id_jogo} className="border-b border-gray-600 hover:bg-gray-700">
-                  <td style={{ cursor: 'pointer' }} onClick={() => carregarCategorias(jogo.id_jogo)} className="py-3 px-6" >{jogo.nome}
-                  </td>
-                  <td className="py-3 px-6" style={{ cursor: 'pointer' }} onClick={() => carregarCategorias(jogo.id_jogo)}>{jogo.descricao}
-                  </td>
+                <tr style={{ cursor: 'pointer' }} onClick={() => carregarCategorias(jogo.id_jogo)} key={jogo.id_jogo}
+                 className="border-b border-gray-600 hover:bg-gray-700">
 
-                  <td className="py-3 px-6 text-center space-x-2">
+                <td className="py-2 px-3">
+                <img src={`http://localhost:3001/uploads/${jogo.capa}`} alt={`Capa de ${jogo.nome}`} 
+                className="w-15 h-15 object-cover rounded shadow-md" />
+               </td>
+
+                  <td  className="px-1" >{jogo.nome} </td>
+                  <td className=" max-w-xs truncate" >{jogo.descricao} </td>
+
+                  <td className="py-3 px-5 text-right space-x-2">
                     <Link to={`/admin/atualizar-jogo/${jogo.id_jogo}`} style={{ cursor: 'pointer' }}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded font-medium">Editar</Link>
                     <button onClick={() => excluirJogo(jogo.id_jogo)} style={{ cursor: 'pointer' }}

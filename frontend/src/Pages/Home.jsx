@@ -162,11 +162,7 @@ export default function Home() {
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>
       </nav>
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-5xl font-bold">Bem-vindo ao Home</h1>
-        </div>
-      </div>
+     
 
 
       <div className="flex justify-center items-center my-5 max-h-[60vh] h-[60vh] overflow-hidden">
@@ -196,32 +192,36 @@ export default function Home() {
         <div className="max-w-7xl mx-auto p-6 flex flex-col gap-10">
 
 
-          <div className="justify-start ">
-            <h2 className="text-2xl font-bold">Recomendações</h2>
+          <div className="justify-start ml-7 ">
+            <h1 className="text-3xl font-bold text-gray-400 mb-4">Recomendações</h1>
             <div className="flex flex-wrap gap-6">
-              {recomendacoes.map((rec, index) => (
-                <div key={index} className="w-60">
-                  <h3 className="font-bold">{rec.nome}</h3>
-                  <img src={`http://localhost:3001/uploads/${rec.capa}`} alt={`Capa de ${rec.nome}`} className="object-contain h-60" />
-                  <p className="text-gray-400">{new Date(rec.dt_lanca).toLocaleDateString('pt-BR')}</p>
+              {recomendacoes.slice(0, 5).map((rec, index) => (
+                <div key={index}  className="shadow-lg flex flex-col w-50 h-90 bg-black/50 rounded-md overflow-hidden">
+                  <div className="w-full h-72 flex justify-center items-center overflow-hidden">
+                  <img src={`http://localhost:3001/uploads/${rec.capa}`} alt={`Capa de ${rec.nome}`} className="w-full h-full object-cover"  />
+                 </div>
 
-                  <button
+                 <div className="p-1 flex flex-col justify-between flex-grow">
+               <h3 className="font-bold">{rec.nome}</h3>
+                  <p className="text-gray-400">{new Date(rec.dt_lanca).toLocaleDateString('pt-BR')}</p>
+                   <button
                     onClick={() => favoritos.includes(rec.id_jogo) ? desfavoritarJogo(rec.id_jogo) : favoritarJogo(rec.id_jogo)}
-                    className={`mt-2 ${favoritos.includes(rec.id_jogo) ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}
-                  >
-                    {favoritos.includes(rec.id_jogo) ? 'Descurtir' : 'Curtir'}
+                    className={`mt-2 ${favoritos.includes(rec.id_jogo) ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'} text-white py-1 px-4 rounded`}> {favoritos.includes(rec.id_jogo) ? 'Descurtir' : 'Curtir'}
                   </button>
+                </div>
+
+                 
                 </div>
               ))}
             </div>
           </div>
 
           <div className="flex gap-10">
-            <div className='w-40'>
+            <div className='w-80'>
               <h1 className="text-2xl font-bold">Filtro</h1>
               <ul>
                 {categorias.map((categoria) => (
-                  <li key={categoria.id_catego}>
+                  <li key={categoria.id_catego} >
                     <button onClick={() => setCategoriaSelecionada(categoria.id_catego)}
                       className={`hover:text-green-500 ${categoriaSelecionada === categoria.id_catego ? 'text-green-500' : 'text-white'} `}>
                       {categoria.nome}
@@ -237,20 +237,17 @@ export default function Home() {
             </div>
 
 
-            <div className="justify-start ">
-              <h2 className="text-2xl font-bold">Jogos</h2>
+            <div className="justify-start">
+              <h2 className="text-3xl font-bold text-gray-400 mb-4">Jogos</h2>
               <div className="flex flex-wrap gap-6">
-                {(categoriaSelecionada
-                  ? jogos.filter(jogo => relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)) : jogos
-                ).map((jogo) => (
-                  <div key={jogo.id_jogo} className="shadow-lg flex flex-col w-50 bg-gray-700 rounded-md overflow-hidden">
+                {(categoriaSelecionada ? jogos.filter(jogo => relacoes.some(rel => rel.id_jogo === jogo.id_jogo && rel.id_catego === categoriaSelecionada)) : jogos).map((jogo) => (
+                  <div key={jogo.id_jogo} className="shadow-lg flex flex-col w-50 h-90 bg-black/50 rounded-md overflow-hidden">
                     <div className="w-full h-72 flex justify-center items-center overflow-hidden">
                       <img src={`http://localhost:3001/uploads/${jogo.capa}`} alt={`Capa de ${jogo.nome}`} className="w-full h-full object-cover" />
                     </div>
-                    <div className="p-2 flex flex-col justify-between flex-grow">
+                    <div className="p-1 flex flex-col justify-between flex-grow">
                       <div>
                         <h3 className="font-bold">{jogo.nome}</h3>
-                        <p className="text-sm">{jogo.descricao}</p>
                         <p className="text-gray-400">{new Date(jogo.dt_lanca).toLocaleDateString('pt-BR')}</p>
                       </div>
                       <button onClick={() => favoritos.includes(jogo.id_jogo) ? desfavoritarJogo(jogo.id_jogo) : favoritarJogo(jogo.id_jogo)}

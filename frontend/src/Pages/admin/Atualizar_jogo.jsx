@@ -45,7 +45,11 @@ export default function AtualizarUsuario() {
             formData.append('nomeJogo', nomeJogo);
             formData.append('descricao', Descricao);
             formData.append('dt_lanca', dtLancamento);
-            formData.append('capa', arquivo);
+           if (arquivo instanceof File) {
+            formData.append('capa', arquivo);  // Só manda se for um novo arquivo
+            } else {
+            formData.append('capaAntiga', typeof arquivo === 'string' ? arquivo : '');
+            }
 
             const resposta = await fetch(`http://localhost:3001/admin/atualizar-jogo/${id}`, {
                 method: 'POST',

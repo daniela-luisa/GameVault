@@ -575,11 +575,10 @@ const id_jogo = req.params.id;
 /* POST alteração de jogo */
 export async function postAtualizarJogo(req, res) {
  const id_jogo = req.params.id;
- const { nomeJogo, descricao, dt_lanca} = req.body;
- 
-   const capa = req.file ? req.file.filename : null;
+ const { nomeJogo, descricao, dt_lanca, capaAntiga} = req.body;
+ const novaCapa = req.file ? req.file.filename : capaAntiga;
 
-  if (!nomeJogo || !descricao || !dt_lanca || !capa) {
+  if (!nomeJogo || !descricao || !dt_lanca || !novaCapa) {
     return res.json({
       admNome: global.admNome,
       jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
@@ -588,10 +587,10 @@ export async function postAtualizarJogo(req, res) {
     });
   }
   try {
-    await adminAtualizarJogo(id_jogo, nomeJogo, descricao, dt_lanca, capa);
+    await adminAtualizarJogo(id_jogo, nomeJogo, descricao, dt_lanca, novaCapa);
     res.json({
       admNome: global.admNome,
-      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
+      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: novaCapa,},
       mensagem: 'Jogo atualizado com sucesso!',
       sucesso: true,
     });
@@ -600,7 +599,7 @@ export async function postAtualizarJogo(req, res) {
     console.error(erro);
     res.json({
       admNome: global.admNome,
-      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: capa,},
+      jogo: { id_jogo, nome: nomeJogo, descricao: descricao, dt_lanca : dt_lanca, capa: novaCapa,},
       mensagem: 'Erro ao atualizar Jogo.',
       sucesso: false,
     });
