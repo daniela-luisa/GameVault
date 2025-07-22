@@ -1,6 +1,7 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
 import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg, favoritar, deletarFavorito} from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
+import { gerarToken } from '../../utils/jwt.js';
 
 //get categorias
 export async function getCategorias(req, res, next){
@@ -87,20 +88,28 @@ export async function loginUsuario(req, res) {
   const { email, senha } = req.body;
 
   try {
-    const usuario = await autenticarUsuario(email, senha);
+    const usuario = await autenticarUsuario({email, senha});
 
     if (usuario) {
-      res.json({ mensagem: 'Login bem-sucedido', usuario });
+      const token = gerarToken(usuario);
+
+      // Define cookie com o token
+      res.cookie('token', token, {
+      httpOnly: true, // Não acessível via JavaScript
+      secure: process.env.NODE_ENV === 'production', // HTTPS em produção
+      maxAge: 24 * 60 * 60 * 1000 // 24 horas
+      });
+      console.log('Login realizado com sucesso para:', email);
+
+      res.json({ mensagem: 'Login bem-sucedido', token, usuario });
       
-     global.usuarioCodigo = usuario.id_usuario;
-     global.usuarioEmail = usuario.email;
-     global.usuarioNome = usuario.nomeUsuario
     } else {
       res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
   } catch (error) {
-    res.status(500).json({ erro: 'Erro ao fazer login' });
-  }
+  console.error('Erro ao fazer login:', error); // ← mostra o erro real no terminal
+  res.status(500).json({ erro: 'Erro ao fazer login' });
+}
 }
 
   //post cadastro
@@ -134,7 +143,7 @@ export async function loginUsuario(req, res) {
   //para o perfil do usuario
   export async function getUsuario (req, res, next){
     const { id } = req.params;
-    console.log('ID recebido:', id);
+
     try {
       const usuario = await buscarUsuario(id);
       if (!usuario) {

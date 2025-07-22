@@ -1,14 +1,49 @@
 import { conectar } from '../config/db.js';
-export async function autenticarUsuario(email, senha) {
-    const conexao = await conectar();
-    const [usuarioEncontrado] = await conexao.query('SELECT * FROM usuario WHERE email = ? AND senha = ?', [email, senha]);
-    const usuario = usuarioEncontrado[0];
-    const [categorias] = await conexao.query('SELECT * FROM usu_categ_pref WHERE id_usuario = ?', [usuario.id_usuario]);
-  
-    const cadastro2Completo = Array.isArray(categorias) && categorias.length > 0;
+import bcrypt from 'bcryptjs';
 
-    return {id: usuario.id_usuario, email: usuario.email, cadastro2Completo}; 
-   }
+export async function autenticarUsuario(usuario) {
+  const conexao = await conectar();
+  const [usuarioEncontrado] = await conexao.query('SELECT * FROM usuario WHERE email = ?',[usuario.email]);
+
+  if (!usuarioEncontrado || usuarioEncontrado.length === 0) {
+    return null;
+  }
+
+  const user = usuarioEncontrado[0];
+  let senhaValida = false;
+
+  // 🔍 log útil
+  console.log('Senha no banco:', user.senha);
+  console.log('Senha digitada:', usuario.senha);
+
+  if (user.senha.startsWith('$2a$') || user.senha.startsWith('$2b$')) {
+    senhaValida = await bcrypt.compare(usuario.senha, user.senha);
+  } else {
+    senhaValida = user.senha === usuario.senha;
+
+    if (senhaValida) {
+      const novoHash = await bcrypt.hash(usuario.senha, 10);
+      await atualizarSenhaUsuario(user.id_usuario, novoHash);
+      user.senha = novoHash;
+    }
+  }
+
+  if (!senhaValida) {
+    return null;
+  }
+
+  const [categorias] = await conexao.query('SELECT * FROM usu_categ_pref WHERE id_usuario = ?',[user.id_usuario]);
+  const cadastro2Completo = Array.isArray(categorias) && categorias.length > 0;
+
+  return { id_usuario: user.id_usuario,email: user.email, cadastro2Completo};
+}
+
+
+  async function atualizarSenhaUsuario(usucodigo, novoHash) {
+    const conexao = await conectar();
+    const sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?;";
+    await conexao.query(sql, [novoHash, usucodigo]);
+}
 
   export async function criarUsuario(nome, nomeUsuario, dtNascimento, email, senha) {
     const conexao = await conectar();
@@ -37,7 +72,7 @@ export async function buscarUsu_categ_pref(){
 
 export async function buscarUsuario(id){
   const conexao = await conectar();
-  const usuario = await conexao.query('select * from usuario where id_usuario = ?', [id])
+  const usuario = await conexao.query('select * from usuario where email = ?', [id])
   return usuario[0];
 }
 
