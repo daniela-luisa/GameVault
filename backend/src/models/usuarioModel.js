@@ -12,10 +12,6 @@ export async function autenticarUsuario(usuario) {
   const user = usuarioEncontrado[0];
   let senhaValida = false;
 
-  // 🔍 log útil
-  console.log('Senha no banco:', user.senha);
-  console.log('Senha digitada:', usuario.senha);
-
   if (user.senha.startsWith('$2a$') || user.senha.startsWith('$2b$')) {
     senhaValida = await bcrypt.compare(usuario.senha, user.senha);
   } else {
@@ -38,12 +34,32 @@ export async function autenticarUsuario(usuario) {
   return { id_usuario: user.id_usuario,email: user.email, cadastro2Completo};
 }
 
-
   async function atualizarSenhaUsuario(usucodigo, novoHash) {
     const conexao = await conectar();
     const sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?;";
     await conexao.query(sql, [novoHash, usucodigo]);
 }
+
+  export async function invalidarToken(token) {
+    const conexao = await conectar();
+    const sql = "INSERT INTO tokens_invalidados (token) VALUES (?)";
+    await conexao.query(sql, [token]);
+}
+
+  export async function verificarTokenInvalidado(token) {
+    const conexao = await conectar();
+    const sql = "SELECT COUNT(*) as count FROM tokens_invalidados WHERE token = ?";
+    const [result] = await conexao.query(sql, [token]);
+    return result[0].count > 0;
+}
+
+  export async function limparTokensExpirados() {
+    const conexao = await conectar();
+    // Remove tokens invalidados há mais de 24 horas
+    const sql = "DELETE FROM tokens_invalidados WHERE data_invalidacao < DATE_SUB(NOW(), INTERVAL 24 HOUR)";
+    await conexao.query(sql);
+}
+
 
   export async function criarUsuario(nome, nomeUsuario, dtNascimento, email, senha) {
     const conexao = await conectar();

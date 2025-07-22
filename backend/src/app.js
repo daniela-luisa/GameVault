@@ -8,6 +8,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import logger  from 'morgan';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 
 app.use(cors());

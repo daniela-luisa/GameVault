@@ -25,7 +25,7 @@ export async function getUsu_categ_pref(req, res, next){
   }
 }
 
-export async function home(req, res, next){
+ export async function home(req, res, next){
    try {
   const id_usuario = req.params.id;
   const recomendacoes = await buscarRecomendacoes(id_usuario); 
@@ -131,7 +131,6 @@ export async function loginUsuario(req, res) {
   //post salvar as categorias pro usuario
   export async function salvarCategorias(req, res) {
     const { id_usuario, categorias } = req.body;  
-    console.log(req.body);
     try {
       await categoriaEscolhida(id_usuario, categorias);
       return res.status(200).json({ mensagem: 'Categorias salvas com sucesso!' });

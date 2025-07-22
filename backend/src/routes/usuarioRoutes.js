@@ -14,7 +14,7 @@ router.post('/cadastro', cadastroUsuario);
 router.post('/salvar-categorias', salvarCategorias);
 router.get('/categorias_usuario',  getUsu_categ_pref );
 
-router.get('/home/:id', verificarToken, home);
+router.get('/home/:id', home);
 router.get('/categorias', getCategorias);
 router.get('/jogos',  getJogos);
 router.post('/favoritar', postFavoritar)
