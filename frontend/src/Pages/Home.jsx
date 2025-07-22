@@ -36,24 +36,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    async function carregarFavoritos() {
-      try {
-        const resposta = await fetch(`http://localhost:3001/favoritos/${id_usuario}`);
-        const dados = await resposta.json();
-        console.log('Favoritos recebidos:', dados);
-        const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
-        setFavoritos(idsFavoritados);
-      } catch (error) {
-        console.error('Erro ao carregar favoritos:', error);
-      }
-    }
-
-    if (id_usuario) {
-      carregarFavoritos();
-    }
-  }, [id_usuario]);
-
   const favoritarJogo = async (id_jogo) => {
     try {
       const resposta = await fetch('http://localhost:3001/favoritar', {
@@ -92,11 +74,17 @@ export default function Home() {
 
 
   useEffect(() => {
-    async function carregarRecomendacoes() {
+    async function carregarHome() {
       try {
         const resposta = await fetch(`http://localhost:3001/home/${id}`);
         const dados = await resposta.json();
-        console.log('Recomendações:', dados.recomendacoes);
+
+        setCategorias(dados.categorias);
+        setJogos(dados.jogos);
+
+        const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
+        setFavoritos(idsFavoritados)
+
         setRecomendacoes(dados.recomendacoes || []);
         setRelacoes(dados.relacoes || []);
       } catch (error) {
@@ -105,51 +93,9 @@ export default function Home() {
     }
 
     if (id_usuario) {
-      carregarRecomendacoes();
+      carregarHome();
     }
   }, [id_usuario]);
-
-
-  useEffect(() => {
-    async function carregarJogos() {
-      try {
-        const resposta = await fetch('http://localhost:3001/jogos');
-
-        if (resposta.status === 401) {
-          console.log('Usuário não autenticado, redirecionando para /...');
-          navigate('/');
-          return;  // para não continuar a execução
-        }
-
-        const dados = await resposta.json();
-        console.log('jogos:', dados)
-        setJogos(dados);
-      } catch (error) {
-        console.error('Erro ao buscar jogos:', error);
-      }
-    }
-    carregarJogos();
-  }, []);
-
-  useEffect(() => {
-    async function carregarCategorias() {
-      try {
-        const resposta = await fetch('http://localhost:3001/categorias');
-        if (resposta.status === 401) {
-          console.log('Usuário não autenticado, redirecionando para /...');
-          navigate('/');
-          return;  // para não continuar a execução
-        }
-
-        const dados = await resposta.json();
-        console.log('categorias:', dados);
-        setCategorias(dados);
-      } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
-      }
-    }
-    carregarCategorias();
-  }, []);
 
 
   return (
@@ -305,3 +251,5 @@ export default function Home() {
     </div>
   );
 }
+
+

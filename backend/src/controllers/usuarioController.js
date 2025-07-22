@@ -3,17 +3,7 @@ import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, bus
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 import { gerarToken } from '../../utils/jwt.js';
 
-//get categorias
-export async function getCategorias(req, res, next){
-  try {
-    const categorias = await buscarCategorias();
-    res.json(categorias);
 
-  }catch (error){
-    res.status(500).json({ erro: 'Erro ao buscar categorias' });
-
-  }
-}
 export async function getUsu_categ_pref(req, res, next){
   try {
     const usu_categ_pref = await buscarUsu_categ_pref();
@@ -25,17 +15,24 @@ export async function getUsu_categ_pref(req, res, next){
   }
 }
 
- export async function home(req, res, next){
+export async function home(req, res, next){
    try {
   const id_usuario = req.params.id;
+
+  const categorias = await buscarCategorias();
+  const jogos = await buscarJogos();
+  const favoritos = await buscarFavoritos(id_usuario);
   const recomendacoes = await buscarRecomendacoes(id_usuario); 
   const relacoes = await buscarJogoCateg();
   res.json({id_usuario: id_usuario,
+    categorias,
+    jogos,
+    favoritos,
     relacoes,
     recomendacoes
   });
     }catch (error){
-    res.status(500).json({ erro: 'Erro ao buscar jogos recomendados do usuario' });
+    res.status(500).json({ erro: 'Erro' });
   }
 }
 
@@ -166,16 +163,6 @@ export async function uploadPerfil(req, res, next){
 res.json({foto});
 
 }
-
-  export async function getJogos (req, res, next){
-    try{
-      const jogos = await buscarJogos();
-      res.json(jogos);
-
-    }catch{
-      res.status(500).json({ erro: 'Erro ao buscar jogos' });
-    }
-  }
 
 export async function getFavoritos(req, res, next){
   const id = req.params.id;
