@@ -19,6 +19,58 @@ export default function Home() {
   const navigate = useNavigate();
   const [recomendacoes, setRecomendacoes] = useState([]);
 
+   useEffect(() => {
+ const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.warn("Sem token, redirecionando...");
+    navigate("/"); // redireciona pro login
+    return;
+  }
+
+  async function carregarHome() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.warn("Sem token, redirecionando...");
+      navigate("/");
+      return;
+    }
+
+    try {
+      const resposta = await fetch(`http://localhost:3001/home/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!resposta.ok) {
+        console.error("Erro ao carregar home:", resposta.status);
+        navigate("/");
+        return;
+      }
+
+      const dados = await resposta.json();
+
+      setCategorias(dados.categorias);
+      setJogos(dados.jogos);
+
+      const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
+      setFavoritos(idsFavoritados)
+
+      setRecomendacoes(dados.recomendacoes || []);
+      setRelacoes(dados.relacoes || []);
+    } catch (error) {
+      console.error('Erro ao carregar home:', error);
+    }
+  }
+
+  if (id_usuario) {
+    carregarHome();
+  }
+}, [id_usuario]);
+
+
+
   const imagens = [
     "/images/Melhores-Jogos-de-Videogames.jpg",
     "/images/2.jpg",
@@ -71,31 +123,6 @@ export default function Home() {
       alert('Erro ao desfavoritar.');
     }
   };
-
-
-  useEffect(() => {
-    async function carregarHome() {
-      try {
-        const resposta = await fetch(`http://localhost:3001/home/${id}`);
-        const dados = await resposta.json();
-
-        setCategorias(dados.categorias);
-        setJogos(dados.jogos);
-
-        const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
-        setFavoritos(idsFavoritados)
-
-        setRecomendacoes(dados.recomendacoes || []);
-        setRelacoes(dados.relacoes || []);
-      } catch (error) {
-        console.error('Erro ao carregar recomendações:', error);
-      }
-    }
-
-    if (id_usuario) {
-      carregarHome();
-    }
-  }, [id_usuario]);
 
 
   return (

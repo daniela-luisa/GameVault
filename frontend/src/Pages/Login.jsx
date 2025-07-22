@@ -24,6 +24,8 @@ export default function Login() {
 
        localStorage.setItem('token', dados.token);
       localStorage.setItem('id_usuario', dados.usuario.id_usuario); 
+
+      console.log("Token salvo:", localStorage.getItem("token"));
       //--------------------------------------------------
       if (dados.usuario.cadastro2Completo) {
         console.log('Redirecionando para home...');
