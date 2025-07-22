@@ -1,0 +1,5 @@
+# Arquivo de variáveis de ambiente (NUNCA subir)
+.env
+
+# Módulos instalados pelo npm (não precisam ser versionados)
+node_modules/
