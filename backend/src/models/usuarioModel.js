@@ -126,7 +126,7 @@ export async function buscarUsu_categ_pref(){
 export async function buscarUsuario(id){
   const conexao = await conectar();
   try{
-  const usuario = await conexao.query('select * from usuario where email = ?', [id])
+  const usuario = await conexao.query('select * from usuario where id_usuario = ?', [id])
   return usuario[0];
    } finally {
     conexao.release();

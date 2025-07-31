@@ -9,9 +9,14 @@ export default function Perfil() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     async function buscarPerfil() {
       try {
-        const resposta = await fetch(`http://localhost:3001/perfil/${id}`);
+        const resposta = await fetch(`http://localhost:3001/perfil/${id}`,{
+         headers: {
+    Authorization: `Bearer ${token}`
+         }
+  });
         if (resposta.status === 401) {
           console.log('Usuário não autenticado, redirecionando para /login...');
           navigate('/');

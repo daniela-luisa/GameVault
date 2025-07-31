@@ -126,7 +126,13 @@ export async function loginUsuario(req, res) {
 
   //para o perfil do usuario
   export async function getUsuario (req, res, next){
-    const { id } = req.params;
+    const  id  = parseInt(req.params.id);
+    const idToken = req.usuario.id_usuario;
+
+  // Impedir acesso se os IDs não batem
+ if (id !== idToken) {
+  return res.status(401).json({ erro: 'Token inválido para este usuário' });
+}
 
     try {
       const usuario = await buscarUsuario(id);
