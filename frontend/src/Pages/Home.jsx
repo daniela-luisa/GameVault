@@ -130,7 +130,7 @@ export default function Home() {
       <nav className="bg-black flex justify-between items-center px-6 py-4 text-sm font-semibold text-white">
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
-          <a href="/home" className="hover:text-green-500 text-green-500">Inicio</a>
+          <a href={`/home/${id}`}  className="hover:text-green-500 text-green-500">Inicio</a>
           <a href={`/favoritos/${id_usuario}`} className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>

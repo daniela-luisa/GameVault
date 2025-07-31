@@ -159,7 +159,13 @@ res.json({foto});
 }
 
 export async function getFavoritos(req, res, next){
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
+  const idToken = req.usuario.id_usuario;
+
+  // Impedir acesso se os IDs não batem
+ if (id !== idToken) {
+  return res.status(401).json({ erro: 'Token inválido para este usuário' });
+}
 
   const favoritos = await buscarFavoritos(id);
 

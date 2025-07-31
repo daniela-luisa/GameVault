@@ -21,6 +21,6 @@ router.get('/excluir-favorito/:id_usuario/:id_jogo', getDeletarFavorito)
 router.get('/perfil/:id',verificarToken, getUsuario);
 router.post('/perfil/:id/foto', upload.single('foto'), uploadPerfil);
 
-router.get('/favoritos/:id', getFavoritos);
+router.get('/favoritos/:id',verificarToken, getFavoritos);
 
 export default router;

@@ -10,9 +10,21 @@ export default function Favoritos() {
   const [favoritos, setFavoritos] = useState([]);
 
   useEffect(() => {
+  const token = localStorage.getItem("token");
     async function carregarFavoritos() {
       try {
-        const resposta = await fetch(`http://localhost:3001/favoritos/${id}`);
+        const resposta = await fetch(`http://localhost:3001/favoritos/${id}`,{
+         headers: {
+    Authorization: `Bearer ${token}`
+         }
+  });
+
+     if (resposta.status === 401) {
+          console.log('Usuário não autenticado, redirecionando para /login...');
+          navigate('/');
+          return;
+        }
+        
         const dados = await resposta.json();
         console.log('Recomendações:', dados.favoritos);
         setFavoritos(dados.favoritos || []);
