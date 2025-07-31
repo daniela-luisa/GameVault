@@ -19,6 +19,80 @@ export default function Home() {
   const navigate = useNavigate();
   const [recomendacoes, setRecomendacoes] = useState([]);
 
+   useEffect(() => {
+ const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.warn("Sem token, redirecionando...");
+    navigate("/"); // redireciona pro login
+    return;
+  }
+
+  async function carregarHome() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.warn("Sem token, redirecionando..."); 
+      navigate("/");
+      return;
+    }
+
+    try {
+      const resposta = await fetch(`http://localhost:3001/home/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!resposta.ok) {
+        console.error("Erro ao carregar home:", resposta.status);
+        navigate("/");
+        return;
+      }
+
+      const dados = await resposta.json();
+
+      setCategorias(dados.categorias);
+      setJogos(dados.jogos);
+
+      const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
+      setFavoritos(idsFavoritados)
+
+      setRecomendacoes(dados.recomendacoes || []);
+      setRelacoes(dados.relacoes || []);
+    } catch (error) {
+      console.error('Erro ao carregar home:', error);
+    }
+  }
+
+  if (id_usuario) {
+    carregarHome();
+  }
+}, [id_usuario]);
+
+const logout = async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    // Chama o backend para invalidar (opcional)
+    await fetch("http://localhost:3001/logout", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    console.warn("Erro ao tentar logout no backend:", err);
+  }
+
+  // 🔥 Isso deve rodar SEMPRE, mesmo que o backend falhe
+  localStorage.removeItem("token");
+  localStorage.removeItem("id_usuario");
+  navigate("/");
+
+};
+
+
+
   const imagens = [
     "/images/Melhores-Jogos-de-Videogames.jpg",
     "/images/2.jpg",
@@ -35,24 +109,6 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    async function carregarFavoritos() {
-      try {
-        const resposta = await fetch(`http://localhost:3001/favoritos/${id_usuario}`);
-        const dados = await resposta.json();
-        console.log('Favoritos recebidos:', dados);
-        const idsFavoritados = (dados.favoritos || []).map(fav => fav.id_jogo);
-        setFavoritos(idsFavoritados);
-      } catch (error) {
-        console.error('Erro ao carregar favoritos:', error);
-      }
-    }
-
-    if (id_usuario) {
-      carregarFavoritos();
-    }
-  }, [id_usuario]);
 
   const favoritarJogo = async (id_jogo) => {
     try {
@@ -91,76 +147,17 @@ export default function Home() {
   };
 
 
-  useEffect(() => {
-    async function carregarRecomendacoes() {
-      try {
-        const resposta = await fetch(`http://localhost:3001/home/${id}`);
-        const dados = await resposta.json();
-        console.log('Recomendações:', dados.recomendacoes);
-        setRecomendacoes(dados.recomendacoes || []);
-        setRelacoes(dados.relacoes || []);
-      } catch (error) {
-        console.error('Erro ao carregar recomendações:', error);
-      }
-    }
-
-    if (id_usuario) {
-      carregarRecomendacoes();
-    }
-  }, [id_usuario]);
-
-
-  useEffect(() => {
-    async function carregarJogos() {
-      try {
-        const resposta = await fetch('http://localhost:3001/jogos');
-
-        if (resposta.status === 401) {
-          console.log('Usuário não autenticado, redirecionando para /...');
-          navigate('/');
-          return;  // para não continuar a execução
-        }
-
-        const dados = await resposta.json();
-        console.log('jogos:', dados)
-        setJogos(dados);
-      } catch (error) {
-        console.error('Erro ao buscar jogos:', error);
-      }
-    }
-    carregarJogos();
-  }, []);
-
-  useEffect(() => {
-    async function carregarCategorias() {
-      try {
-        const resposta = await fetch('http://localhost:3001/categorias');
-        if (resposta.status === 401) {
-          console.log('Usuário não autenticado, redirecionando para /...');
-          navigate('/');
-          return;  // para não continuar a execução
-        }
-
-        const dados = await resposta.json();
-        console.log('categorias:', dados);
-        setCategorias(dados);
-      } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
-      }
-    }
-    carregarCategorias();
-  }, []);
-
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000A05] via-[#002211] to-[#003F1F] text-white">
       <nav className="bg-black flex justify-between items-center px-6 py-4 text-sm font-semibold text-white">
         <div className="flex items-center space-x-6">
           <img src="../Game-removebg-preview.png" alt="Logo" className="h-10 w-auto" />
-          <a href="/home" className="hover:text-green-500 text-green-500">Inicio</a>
+          <a href={`/home/${id}`}  className="hover:text-green-500 text-green-500">Inicio</a>
           <a href={`/favoritos/${id_usuario}`} className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>
+        <button onClick={logout} className="hover:text-green-500 px-3 ">Logout
+          </button>
       </nav>
      
 

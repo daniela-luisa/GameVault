@@ -22,11 +22,14 @@ export default function Login() {
     if (resposta.ok) {
       console.log(dados);
 
-      localStorage.setItem('id_usuario', dados.usuario.id);
+       localStorage.setItem('token', dados.token);
+      localStorage.setItem('id_usuario', dados.usuario.id_usuario); 
+
+      console.log("Token salvo:", localStorage.getItem("token"));
       //--------------------------------------------------
       if (dados.usuario.cadastro2Completo) {
         console.log('Redirecionando para home...');
-        navigate(`/home/${dados.usuario.id}`);
+        navigate(`/home/${dados.usuario.id_usuario}`);
       } else {
         console.log('Redirecionando para cadastro2...');
         navigate('/cadastro2');

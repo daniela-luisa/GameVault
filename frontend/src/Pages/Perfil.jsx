@@ -9,9 +9,14 @@ export default function Perfil() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     async function buscarPerfil() {
       try {
-        const resposta = await fetch(`http://localhost:3001/perfil/${id}`);
+        const resposta = await fetch(`http://localhost:3001/perfil/${id}`,{
+         headers: {
+    Authorization: `Bearer ${token}`
+         }
+  });
         if (resposta.status === 401) {
           console.log('Usuário não autenticado, redirecionando para /login...');
           navigate('/');
@@ -34,6 +39,28 @@ export default function Perfil() {
 
     buscarPerfil();
   }, [id]);
+
+  const logout = async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    // Chama o backend para invalidar (opcional)
+    await fetch("http://localhost:3001/logout", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    console.warn("Erro ao tentar logout no backend:", err);
+  }
+
+  // 🔥 Isso deve rodar SEMPRE, mesmo que o backend falhe
+  localStorage.removeItem("token");
+  localStorage.removeItem("id_usuario");
+  navigate("/");
+
+};
 
   const handleUpload = async () => {
     if (!arquivo) {
@@ -84,6 +111,8 @@ export default function Perfil() {
           <a href={`/favoritos/${id}`} className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id}`} className="hover:text-green-500 text-green-500">Perfil</a>
         </div>
+       <button onClick={logout} className="hover:text-green-500 px-3 ">Logout
+          </button>
       </nav>
 
       <main className="flex-grow">

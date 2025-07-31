@@ -1,21 +1,19 @@
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+dotenv.config();
 
-export async function conectar() 
-{
-    if (!global.conexao || global.conexao.state === 'disconnected') 
-    {
-    global.conexao = await mysql.createConnection(
-        {
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'gamevault',
-        });
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'gamevault',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+  
+}); 
 
-    console.log(' Conectado ao MySQL!');
-
-  }
-
-  return global.conexao;
+export async function conectar() {
+  return await pool.getConnection();
 }
-

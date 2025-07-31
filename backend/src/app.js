@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
+import cookieParser from 'cookie-parser';
+
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
@@ -8,8 +10,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import logger  from 'morgan';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
