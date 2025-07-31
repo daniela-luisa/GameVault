@@ -69,6 +69,28 @@ export default function Home() {
   }
 }, [id_usuario]);
 
+const logout = async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    // Chama o backend para invalidar (opcional)
+    await fetch("http://localhost:3001/logout", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    console.warn("Erro ao tentar logout no backend:", err);
+  }
+
+  // 🔥 Isso deve rodar SEMPRE, mesmo que o backend falhe
+  localStorage.removeItem("token");
+  localStorage.removeItem("id_usuario");
+  navigate("/");
+
+};
+
 
 
   const imagens = [
@@ -134,6 +156,8 @@ export default function Home() {
           <a href={`/favoritos/${id_usuario}`} className="hover:text-green-500">Favoritos</a>
           <a href={`/perfil/${id_usuario}`} className="hover:text-green-500">Perfil</a>
         </div>
+        <button onClick={logout} className="hover:text-green-500 px-3 ">Logout
+          </button>
       </nav>
      
 

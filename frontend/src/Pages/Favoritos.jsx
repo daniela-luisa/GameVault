@@ -24,7 +24,7 @@ export default function Favoritos() {
           navigate('/');
           return;
         }
-        
+
         const dados = await resposta.json();
         console.log('Recomendações:', dados.favoritos);
         setFavoritos(dados.favoritos || []);
@@ -37,6 +37,28 @@ export default function Favoritos() {
       carregarFavoritos();
     }
   }, [id]);
+
+const logout = async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    // Chama o backend para invalidar (opcional)
+    await fetch("http://localhost:3001/logout", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    console.warn("Erro ao tentar logout no backend:", err);
+  }
+
+  // 🔥 Isso deve rodar SEMPRE, mesmo que o backend falhe
+  localStorage.removeItem("token");
+  localStorage.removeItem("id_usuario");
+  navigate("/");
+
+};
 
   const desfavoritarJogo = async (id_jogo) => {
     try {
@@ -65,6 +87,8 @@ export default function Favoritos() {
           <a href={`/favoritos/${id}`} className="hover:text-green-500 text-green-500">Favoritos</a>
           <a href={`/perfil/${id}`} className="hover:text-green-500">Perfil</a>
         </div>
+       <button onClick={logout} className="hover:text-green-500 px-3 ">Logout
+          </button>
       </nav>
 
       {/* MAIN */}

@@ -1,5 +1,5 @@
 import { buscarCategorias, categoriaEscolhida, buscarUsu_categ_pref} from '../models/usuarioModel.js';
-import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg, favoritar, deletarFavorito} from '../models/usuarioModel.js';
+import { autenticarUsuario, buscarUsuario, buscarJogos, buscarRecomendacoes, buscarFavoritos, buscarJogoCateg, favoritar, deletarFavorito,invalidarToken} from '../models/usuarioModel.js';
 import { criarUsuario, inserirFoto } from '../models/usuarioModel.js';
 import { gerarToken } from '../../utils/jwt.js';
 
@@ -59,12 +59,16 @@ try {
 
 /* GET logout de usuário */
 export async function logOut(req, res, next){
-  global.usuarioEmail = "";
-  global.usuarioCodigo = 0;
-
-  const email =  global.usuarioEmail;
-  const codigo = global.usuarioCodigo;
-  res.json({email: email, codigo: codigo});
+ res.clearCookie('token');
+  
+  // Opcional: Adiciona token à blacklist
+  const token = req.cookies.token;
+  if (token) {
+    invalidarToken(token).catch(err => {
+      console.log('Erro ao invalidar token:', err);
+    });
+  }
+   res.status(200).json({ mensagem: "Logout efetuado" });
 }
 
 
