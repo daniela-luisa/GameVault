@@ -31,7 +31,7 @@ export default function Home() {
   async function carregarHome() {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.warn("Sem token, redirecionando...");
+      console.warn("Sem token, redirecionando..."); 
       navigate("/");
       return;
     }

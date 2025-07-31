@@ -17,13 +17,21 @@ export async function getUsu_categ_pref(req, res, next){
 
 export async function home(req, res, next){
    try {
-  const id_usuario = req.params.id;
+  const id_usuario = parseInt(req.params.id);
+  
+  const idDoToken = req.usuario.id_usuario;
+
+  // Impedir acesso se os IDs não batem
+  if (id_usuario !== idDoToken) {
+    return res.status(403).json({ erro: 'Acesso negado: usuário inválido.' });
+  }
 
   const categorias = await buscarCategorias();
   const jogos = await buscarJogos();
   const favoritos = await buscarFavoritos(id_usuario);
   const recomendacoes = await buscarRecomendacoes(id_usuario); 
   const relacoes = await buscarJogoCateg();
+  
   res.json({id_usuario: id_usuario,
     categorias,
     jogos,
@@ -48,26 +56,6 @@ try {
   }
 
 }
-
-
-// router.get('/browse', async function(req, res, next) {
-//   verificarLogin(res);
-
-//   const destaque = await global.banco.buscarDestaque();
-//   const emAlta = await global.banco.buscarEmAlta();
-//   const porCategoria = await global.banco.buscarPorCategoria();
-//   const categorias = await global.banco.buscarCategorias();
-//   //const recomendacoes = await global.banco.buscarRecomendacoes();
-
-//   res.render('browse', { 
-//     titulo: 'MFlix - Escolha de Vídeo', 
-//     imagem: global.perfil.perfoto,
-//     destaque,
-//     emAlta,
-//     porCategoria,
-//     categorias
-//   });
-// });
 
 /* GET logout de usuário */
 export async function logOut(req, res, next){
